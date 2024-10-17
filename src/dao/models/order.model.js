@@ -12,10 +12,14 @@ const schema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: "Users"
     },
-    products: [],
+    products: [{
+        name: String,
+        price: Number
+    }],
     totalPrice: Number,
     status: { type: String }
 })
+
 
 const orderModel = mongoose.model(collection, schema)
 
