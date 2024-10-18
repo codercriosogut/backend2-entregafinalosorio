@@ -28,8 +28,13 @@ export const addProduct = async (req, res) => {
     product.id = new mongoose.Types.ObjectId();
     let business = await businessService.getBusinessById(req.params.bid);
 
+    if (!business) {
+        return res.status(404).send({ status: "error", error: "Business not found" });
+    }
     business.products.push(product);
     await businessService.updateBusiness(business._id, business);
+    
+
 
     res.send({ status: "success", result: "Business updated" });
 };

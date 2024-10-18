@@ -33,9 +33,13 @@ export const createOrder = async (req, res) => {
     const resultBusiness = await businessService.getBusinessById(businessId);
     const resultUser = await usersService.getUserById(userId);
 
-    if (!resultBusiness || !resultUser) {
-        return res.status(400).send({ status: "error", error: "User or Business not found" });
+    if (!resultBusiness) {
+        return res.status(404).send({ status: "error", error: "Business not found" });
     }
+    if (!resultUser) {
+        return res.status(404).send({ status: "error", error: "User not found" });
+    }
+    
 
     const actualOrders = resultBusiness.products.filter(product => productIds.includes(product.id.toString()));
 

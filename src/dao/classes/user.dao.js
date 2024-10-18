@@ -13,15 +13,15 @@ export default class User {
 
     getUserById = async (id) => {
         try {
-            // Poblamos las órdenes del usuario y los productos dentro de las órdenes
             let user = await usersModel.findOne({ _id: id })
                 .populate({
-                    path: 'orders',  // Poblar las órdenes
+                    path: 'orders',
                     populate: {
-                        path: 'products.id',  // Poblar los productos dentro de las órdenes
-                        model: 'Product'     // Asegúrate de que "Product" es el nombre correcto del modelo
+                        path: 'products.id',
+                        model: 'Order' // Cambiar a 'Order' si el modelo es 'Order' y no 'Product'
                     }
                 });
+
             return user;
         } catch (error) {
             console.log(error);

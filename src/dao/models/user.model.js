@@ -9,7 +9,8 @@ const schema = new mongoose.Schema({
     orders: [
         {
             type: mongoose.Schema.Types.ObjectId, // Usar 'Schema.Types' en lugar de 'SchemaTypes'
-            ref: "Order" // Cambiar de "Orders" a "Order"
+            ref: "Order" // Asegúrate que 'Order' es correcto y que está definido
+
         }
     ]
 });
