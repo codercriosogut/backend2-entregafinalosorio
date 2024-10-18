@@ -38,11 +38,9 @@ app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-//Routes
 app.use('/api/users', usersRouter)
 app.use('/api/business', businessRouter)
 app.use('/api/orders', ordersRouter)
-
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`)
@@ -53,6 +51,7 @@ app.listen(PORT, () => {
 
 src/controllers/business.controller.js
 import Business from '../dao/classes/business.dao.js'
+import mongoose from 'mongoose';
 
 const businessService = new Business()
 
@@ -77,12 +76,18 @@ export const createBusiness = async (req, res) => {
 }
 
 export const addProduct = async (req, res) => {
-    let product = req.body
-    let business = await businessService.getBusinessById(req.params.bid)
-    business.products.push(product)
-    await businessService.updateBusiness(business._id, business)
-    res.send({ status: "success", result: "Business updated" })
-}
+    let product = req.body;
+    product.id = new mongoose.Types.ObjectId(); 
+    let business = await businessService.getBusinessById(req.params.bid);
+    
+    business.products.push(product);
+    await businessService.updateBusiness(business._id, business);
+
+    res.send({ status: "success", result: "Business updated" });
+};
+
+
+
 
 
 
@@ -95,101 +100,106 @@ const usersService = new User()
 const ordersService = new Order()
 const businessService = new Business()
 
+
+
 export const getOrders = async (req, res) => {
-    let result = await ordersService.getOrders()
-    res.send({ status: "success", result })
-}
+    const orders = await ordersService.getOrders();
+    res.send({ status: "success", orders });
+};
 
 export const getOrderById = async (req, res) => {
-    const { oid } = req.params
-    let order = await ordersService.getOrderById(oid)
-    res.send({ status: "success", result: order })
-}
+    const { id } = req.params;
+    const order = await ordersService.getOrderById(id);
+
+    if (!order) {
+        return res.status(404).send({ status: "error", error: "Order not found" });
+    }
+
+    res.send({ status: "success", order });
+};
+
 
 export const createOrder = async (req, res) => {
-    const { user, business, products } = req.body
-    const resultUser = await usersService.getUserById(user)
-    const resultBusiness = await businessService.getBusinessById(business)
-    let actualOrders = resultBusiness.products.filter(product => products.includes(product.id))
-    let sum = actualOrders.reduce((acc, prev) => {
-        acc += prev.price
-        return acc
-    }, 0)
-    let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1)
+    const { userId, businessId, productIds } = req.body;
+
+    const resultBusiness = await businessService.getBusinessById(businessId);
+    const resultUser = await usersService.getUserById(userId);
+
+    if (!resultBusiness || !resultUser) {
+        return res.status(400).send({ status: "error", error: "User or Business not found" });
+    }
+
+    const actualOrders = resultBusiness.products.filter(product => productIds.includes(product.id.toString()));
+
+    if (!actualOrders.length) {
+        return res.status(400).send({ status: "error", error: "No valid products found" });
+    }
+
+    let totalPrice = actualOrders.reduce((acc, product) => acc + product.price, 0);
+
+    let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
+
     let order = {
         number: orderNumber,
-        business,
-        user,
-        products: actualOrders.map(product => product.id),
-        totalPrice: sum,
+        business: businessId,
+        user: userId,
+        products: actualOrders.map(product => ({
+            id: product.id,
+            name: product.name,
+            price: product.price
+        })),
+        totalPrice,
         status: "pending"
-    }
-    let orderResult = await ordersService.createOrder(order)
-    await usersService.updateUser(user, resultUser)
-    res.send({ status: "success", orderResult })
-}
+    };
+
+    let orderResult = await ordersService.createOrder(order);
+
+    resultUser.orders.push(orderResult._id);
+
+    await usersService.updateUser(userId, resultUser);
+    res.send({ status: "success", orderResult });
+};
 
 export const resolveOrder = async (req, res) => {
-    const { resolve } = req.query
-    let order = await ordersService.getOrderById(req.params.oid)
-    order.status = resolve
-    await ordersService.resolveOrder(order._id, order)
-    res.send({ status: "success", result: "Order resolved" })
+    const { id } = req.params;
 
-}
+    const order = await ordersService.getOrderById(id);
+
+    if (!order) {
+        return res.status(404).send({ status: "error", error: "Order not found" });
+    }
+
+
+    order.status = "resolved";
+
+    await ordersService.updateOrder(order._id, order);
+    res.send({ status: "success", order });
+};
+
+
 
 
 
 src/controllers/users.controller.js
-import Order from '../dao/classes/order.dao.js'
-import Business from '../dao/classes/business.dao.js'
 import User from '../dao/classes/user.dao.js'
 
 const usersService = new User()
-const ordersService = new Order()
-const businessService = new Business()
 
-export const getOrders = async (req, res) => {
-    let result = await ordersService.getOrders()
+export const getUsers = async (req, res) => {
+    let result = await usersService.getUsers()
     res.send({ status: "success", result })
 }
 
-export const getOrderById = async (req, res) => {
-    const { oid } = req.params
-    let order = await ordersService.getOrderById(oid)
-    res.send({ status: "success", result: order })
+export const getUserById = async (req, res) => {
+    const { uid } = req.params
+    let user = await usersService.getUserById(uid)
+    res.send({ status: "success", result: user })
 }
 
-export const createOrder = async (req, res) => {
-    const { user, business, products } = req.body
-    const resultUser = await usersService.getUserById(user)
-    const resultBusiness = await businessService.getBusinessById(business)
-    let actualOrders = resultBusiness.products.filter(product => products.includes(product.id))
-    let sum = actualOrders.reduce((acc, prev) => {
-        acc += prev.price
-        return acc
-    }, 0)
-    let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1)
-    let order = {
-        number: orderNumber,
-        business,
-        user,
-        products: actualOrders.map(product => product.id),
-        totalPrice: sum,
-        status: "pending"
-    }
-    let orderResult = await ordersService.createOrder(order)
-    await usersService.updateUser(user, resultUser)
-    res.send({ status: "success", orderResult })
-}
-
-export const resolveOrder = async (req, res) => {
-    const { resolve } = req.query
-    let order = await ordersService.getOrderById(req.params.oid)
-    order.status = resolve
-    await ordersService.resolveOrder(order._id, order)
-    res.send({ status: "success", result: "Order resolved" })
-
+export const saveUser = async (req, res) => {
+    const user = req.body
+    let result = await usersService.saveUser(user)
+    res.send({ status: "success", result })
 }
 
 
@@ -290,6 +300,8 @@ export default class Order {
 
 
 
+
+
 src/dao/classes/user.dao.js
 import usersModel from "../models/user.model.js";
 
@@ -336,19 +348,27 @@ export default class User {
 
 
 
+
 src/dao/models/business.model.js
 import mongoose from "mongoose";
 
-const collection = "Business"
+const collection = "Business";
 
 const schema = new mongoose.Schema({
     name: String,
-    products: []
-})
+    products: [{
+        id: mongoose.SchemaTypes.ObjectId,
+        name: String,
+        price: Number
+    }]
+});
 
-const businessModel = mongoose.model(collection, schema)
+const businessModel = mongoose.model(collection, schema);
 
-export default businessModel
+export default businessModel;
+
+
+
 
 
 
@@ -368,6 +388,8 @@ const schema = new mongoose.Schema({
         ref: "Users"
     },
     products: [{
+        //add
+        id: mongoose.SchemaTypes.ObjectId,
         name: String,
         price: Number
     }],
@@ -379,6 +401,8 @@ const schema = new mongoose.Schema({
 const orderModel = mongoose.model(collection, schema)
 
 export default orderModel
+
+
 
 
 
@@ -406,6 +430,9 @@ export default userModel
 
 
 
+
+
+
 src/routes/business.router.js
 import { Router } from "express";
 import { getBusiness, getBusinessById, createBusiness, addProduct } from "../controllers/business.controller.js";
@@ -418,8 +445,10 @@ router.post('/', createBusiness)
 router.get('/:bid', getBusinessById)
 router.post('/:bid/product', addProduct)
 
-
 export default router
+
+
+
 
 
 
@@ -438,6 +467,9 @@ export default router
 
 
 
+
+
+
 src/routes/users.router.js
 import { Router } from "express";
 import { getUsers, getUserById, saveUser } from '../controllers/users.controller.js'
@@ -447,7 +479,6 @@ const router = Router()
 router.get('/', getUsers)
 router.get('/:uid', getUserById)
 router.post('/', saveUser)
-
 
 export default router
 

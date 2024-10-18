@@ -133,6 +133,9 @@ Body (Raw, JSON):
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+REPARADO
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 3. Crear una Order (Orden):
 Con el ID del negocio y el ID del usuario obtenidos en los pasos anteriores, ahora puedes crear la orden y agregar productos.
 
@@ -141,39 +144,46 @@ URL: localhost:8080/api/orders
 Body (Raw, JSON):
 
 {
-    "number": 1,
-    "business": "67104a71a19a6250776916e1",
-    "user": "67104ac11b0e82a0b53f2f4a",
-    "products": [
-        {
-            "name": "Procesador Intel i5 3.0Ghz",
-            "price": 100000
-        },
-        {
-            "name": "Memoria RAM 16GB",
-            "price": 80000
-        }
-    ],
-    "totalPrice": 180000,
-    "status": "pending"
+  "businessId": "67100f17b665b616520e2351",
+  "userId": "67101137b665b616520e2353",
+  "productIds": [
+    "67106bf0b518d17aef437c91",
+    "67106df2b518d17aef437c96"
+  ]
 }
+
 #RESULTADO#
 {
     "status": "success",
     "orderResult": {
-        "number": 1729121064319,
-        "business": "67104a71a19a6250776916e1",
-        "user": "67104ac11b0e82a0b53f2f4a",
-        "products": [],
-        "totalPrice": 0,
+        "number": 1729265904024,
+        "business": "67100f17b665b616520e2351",
+        "user": "67101137b665b616520e2353",
+        "products": [
+            {
+                "id": "67106bf0b518d17aef437c91",
+                "name": "cpu",
+                "price": 100,
+                "_id": "671280e94e476b7b1bafd731"
+            },
+            {
+                "id": "67106df2b518d17aef437c96",
+                "name": "ram",
+                "price": 50,
+                "_id": "671280e94e476b7b1bafd732"
+            }
+        ],
+        "totalPrice": 150,
         "status": "pending",
-        "_id": "67104b1e1b0e82a0b53f2f4e",
+        "_id": "671280e94e476b7b1bafd730",
         "__v": 0
     }
 }
 
 
-lo ultimo
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AGREGAR PRODUCTOS A BUSINESS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 POST localhost:8080/api/business/67100f17b665b616520e2351/product
 #CODE#
 {

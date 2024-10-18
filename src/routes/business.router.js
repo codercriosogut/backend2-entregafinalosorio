@@ -9,5 +9,4 @@ router.post('/', createBusiness)
 router.get('/:bid', getBusinessById)
 router.post('/:bid/product', addProduct)
 
-
 export default router
