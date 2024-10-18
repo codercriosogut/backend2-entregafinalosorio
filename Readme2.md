@@ -80,6 +80,9 @@ PUT - PENDIENTE
 
 
 
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 1. Crear un Business (Negocio):
 Primero, necesitas crear un negocio para referenciarlo en la orden.
@@ -89,16 +92,16 @@ URL: localhost:8080/api/business
 Body (Raw, JSON):
 #CODE#
 {
-    "name": "MIPC2.CL",
+    "name": "MI-EMPRESA.CL",
     "products": []
 }
 #RESULTADO#
 {
     "status": "success",
     "result": {
-        "name": "MIPC2.CL",
+        "name": "MI-EMPRESA.CL",
         "products": [],
-        "_id": "67104a71a19a6250776916e1",
+        "_id": "6712d393b884efeb762edba0",
         "__v": 0
     }
 }
@@ -114,22 +117,109 @@ URL: localhost:8080/api/users
 Body (Raw, JSON):
 #CODE#
 {
-    "name":"cristian2",
-    "email":"cristian2@correo.com",
-    "role":"admin"
+    "name":"cristian",
+    "email":"cristian@correo.com",
+    "role":"user"
 }
 %RESULTADO
 {
     "status": "success",
     "result": {
-        "name": "cristian2",
-        "email": "cristian2@correo.com",
-        "role": "admin",
+        "name": "cristian",
+        "email": "cristian@correo.com",
+        "role": "user",
         "orders": [],
-        "_id": "67104ac11b0e82a0b53f2f4a",
+        "_id": "6712dc4cb884efeb762edba2",
         "__v": 0
     }
 }
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+AGREGAR PRODUCTOS A BUSINESS
+POST localhost:8080/api/business/6712d393b884efeb762edba0/product
+#CODE#
+{
+  "name": "cpu",
+  "price": 100
+}
+#RESULTADO#
+{
+    "status": "success",
+    "result": "Business updated"
+}
+
+
+
+CONSULTAR LISTA DE BUSINESS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+POST
+localhost:8080/api/business
+#RESULTADO#
+{
+    "status": "success",
+    "result": [
+        {
+            "_id": "6712d393b884efeb762edba0",
+            "name": "MI-EMPRESA.CL",
+            "products": [
+                {
+                    "id": "6712dcccb884efeb762edba4",
+                    "name": "cpu",
+                    "price": 100,
+                    "_id": "6712dcccb884efeb762edba6"
+                }
+            ],
+            "__v": 0
+        }
+    ]
+}
+
+
+
+CONSULTAR LISTA DE USUARIOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+POST
+localhost:8080/api/users
+#RESULTADO#
+{
+    "status": "success",
+    "result": [
+        {
+            "_id": "6712dc4cb884efeb762edba2",
+            "name": "cristian",
+            "email": "cristian@correo.com",
+            "role": "user",
+            "orders": [],
+            "__v": 0
+        }
+    ]
+}
+
+
+
+
+
+CREAR UNA ORDEN A UN USUARIO Y SUS PRODUCTOS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+POST
+localhost:8080/api/orders
+Body (Raw, JSON):
+{
+  "businessId": "6712d393b884efeb762edba0",
+  "userId": "6712dc4cb884efeb762edba2",
+  "productIds": [
+    "6712dcccb884efeb762edba4"
+  ]
+}
+#RESULTADO#
+
+
+
+
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -181,17 +271,22 @@ Body (Raw, JSON):
 }
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-AGREGAR PRODUCTOS A BUSINESS
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-POST localhost:8080/api/business/67100f17b665b616520e2351/product
-#CODE#
+
+
+
+
+
+
+
 {
-  "name": "cpu",
-  "price": 100
+  "business": "6712d393b884efeb762edba0",
+  "user": "6712dc4cb884efeb762edba2",
+  "products": "6712dcccb884efeb762edba4"
 }
-#RESULTADO#
+
+
 {
-    "status": "success",
-    "result": "Business updated"
+  "userId": "6712dc4cb884efeb762edba2",
+  "businessId": "6712d393b884efeb762edba0",
+  "productIds": ["6712dcccb884efeb762edba4", "6712de1cb884efeb762edbac"]
 }
