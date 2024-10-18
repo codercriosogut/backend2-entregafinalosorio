@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const collection = "Users"
+const collection = "Users";
 
 const schema = new mongoose.Schema({
     name: String,
@@ -8,13 +8,12 @@ const schema = new mongoose.Schema({
     role: String,
     orders: [
         {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "Orders"
+            type: mongoose.Schema.Types.ObjectId, // Usar 'Schema.Types' en lugar de 'SchemaTypes'
+            ref: "Order" // Cambiar de "Orders" a "Order"
         }
     ]
-})
+});
 
-const userModel = mongoose.model(collection, schema)
+const userModel = mongoose.model(collection, schema);
 
-export default userModel
-
+export default userModel;
