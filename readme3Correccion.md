@@ -155,3 +155,9 @@ Body (Raw, JSON)
     }
 }
 
+
+8.- Mail
+Método: GET 
+URL: localhost:8080/mail/order
+#RESULTADO#
+Correo enviado exitosamente
