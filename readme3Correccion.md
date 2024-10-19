@@ -133,6 +133,15 @@ Body (Raw, JSON)
     "6712f7d246018719e2792e53"
   ]
 }
+
+OTRO EJEMPLO
+{
+    "businessId": "6712f75e46018719e2792e4f",
+    "userId": "6712f79a46018719e2792e51",
+    "productIds": ["6712f7d246018719e2792e53"]
+}
+
+
 #RESULTADO#
 {
     "status": "success",
@@ -158,6 +167,24 @@ Body (Raw, JSON)
 
 8.- Mail
 Método: GET 
-URL: localhost:8080/mail/order
+URL: localhost:8080/api/orders/mail/order/6712fa1746018719e2792e61
 #RESULTADO#
 Correo enviado exitosamente
+#RESULTADO#
+Server is running on port 8080
+Conexión a MongoDB establecida
+Correo enviado:  <d400845f-0c3f-f425-6fa1-67e36dde6933@gmail.com>
+#RESULTADO#
+de:	Cristian Osorio <cosoriogut@gmail.com>
+para:	cosoriogut@gmail.com
+fecha:	19 oct 2024, 19:40
+asunto:	Detalles de la Orden
+enviado por:	gmail.com
+Detalles de la Orden
+Gracias por tu pedido!
+Detalles de la Orden:
+Número: 1729296924734
+Estado: pending
+Total: 100
+Productos:
+cpu - $100
