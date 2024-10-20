@@ -89,6 +89,7 @@ app.listen(PORT, () => {
 
 
 
+
 src/controllers/business.controller.js
 import Business from '../dao/classes/business.dao.js'
 import mongoose from 'mongoose';
@@ -125,6 +126,7 @@ export const addProduct = async (req, res) => {
 
     res.send({ status: "success", result: "Business updated" });
 };
+
 
 
 
@@ -274,7 +276,6 @@ export const sendOrderEmail = async (req, res) => {
 
 
 
-
 src/controllers/users.controller.js
 import User from '../dao/classes/user.dao.js'
 
@@ -358,7 +359,6 @@ export default class Business {
         }
     }
 }
-
 
 
 
@@ -490,7 +490,6 @@ export default class User {
 
 
 
-
 src/dao/models/business.model.js
 import mongoose from "mongoose";
 
@@ -508,8 +507,6 @@ const schema = new mongoose.Schema({
 const businessModel = mongoose.model(collection, schema);
 
 export default businessModel;
-
-
 
 
 
@@ -557,10 +554,6 @@ export default orderModel
 
 
 
-
-
-
-
 src/dao/models/user.model.js
 import mongoose from "mongoose";
 
@@ -581,7 +574,6 @@ const schema = new mongoose.Schema({
 const userModel = mongoose.model(collection, schema)
 
 export default userModel
-
 
 
 
@@ -617,7 +609,6 @@ export default router
 
 
 
-
 src/routes/orders.router.js
 import { Router } from 'express';
 import { getOrders, getOrderById, createOrder, resolveOrder, sendOrderEmail } from '../controllers/orders.controller.js';
@@ -633,6 +624,8 @@ router.put('/:oid', resolveOrder); // Resuelve una orden existente
 router.get('/mail/order/:oid', sendOrderEmail); // Envía el correo con los detalles de la orden
 
 export default router;
+
+
 
 
 
