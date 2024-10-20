@@ -29,13 +29,19 @@ import usersRouter from './routes/users.router.js';
 import ordersRouter from './routes/orders.router.js';
 import businessRouter from './routes/business.router.js';
 import mongoose from 'mongoose';
-import nodemailer from 'nodemailer'; // Cambiado a import
-import dotenv from 'dotenv'; // Importando dotenv
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
 
-dotenv.config(); // Inicializa dotenv
+dotenv.config();
 
 const app = express();
 const PORT = 8080;
+
+// Verificación de variables de entorno
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error('Error: Configuración de correo no definida en las variables de entorno');
+    process.exit(1);
+}
 
 // Configuración del transportador de Nodemailer
 const transport = nodemailer.createTransport({
@@ -45,6 +51,9 @@ const transport = nodemailer.createTransport({
         pass: process.env.EMAIL_PASS
     }
 });
+
+// Exporta el transportador para usar en otros archivos
+export { transport };
 
 // Conexión a MongoDB
 mongoose.connect('mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0')
@@ -59,34 +68,11 @@ app.use('/api/users', usersRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/orders', ordersRouter);
 
-// Ruta para enviar el correo de la orden
-app.get('/mail/order', async (req, res) => {
-    try {
-        const result = await transport.sendMail({
-            from: "Cristian Osorio <cosoriogut@gmail.com>",
-            to: "cosoriogut@gmail.com",
-            subject: "Detalles de la Orden",
-            html: `
-            <div>
-                <h1>Detalles de la Orden</h1>
-                <p>Gracias por tu pedido!</p>
-                <!-- Aquí puedes incluir más detalles de la orden -->
-            </div>
-            `,
-            attachments: [] // Aquí puedes agregar archivos si lo necesitas
-        });
-
-        console.log('Correo enviado: ', result.messageId);
-        res.status(200).send('Correo enviado exitosamente');
-    } catch (error) {
-        console.error('Error al enviar el correo: ', error);
-        res.status(500).send('Error al enviar el correo');
-    }
-});
-
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+
 
 
 
@@ -153,16 +139,16 @@ export const addProduct = async (req, res) => {
 
 
 
+
 src/controllers/orders.controller.js
-import Order from '../dao/classes/order.dao.js'
-import Business from '../dao/classes/business.dao.js'
-import User from '../dao/classes/user.dao.js'
+import Order from '../dao/classes/order.dao.js';
+import Business from '../dao/classes/business.dao.js';
+import User from '../dao/classes/user.dao.js';
+import { transport } from '../app.js'; // Importa el transportador
 
-const usersService = new User()
-const ordersService = new Order()
-const businessService = new Business()
-
-
+const usersService = new User();
+const ordersService = new Order();
+const businessService = new Business();
 
 export const getOrders = async (req, res) => {
     const orders = await ordersService.getOrders();
@@ -170,8 +156,8 @@ export const getOrders = async (req, res) => {
 };
 
 export const getOrderById = async (req, res) => {
-    const { id } = req.params;
-    const order = await ordersService.getOrderById(id);
+    const { oid } = req.params;
+    const order = await ordersService.getOrderById(oid);
 
     if (!order) {
         return res.status(404).send({ status: "error", error: "Order not found" });
@@ -179,7 +165,6 @@ export const getOrderById = async (req, res) => {
 
     res.send({ status: "success", order });
 };
-
 
 export const createOrder = async (req, res) => {
     const { userId, businessId, productIds } = req.body;
@@ -198,7 +183,6 @@ export const createOrder = async (req, res) => {
     }
 
     let totalPrice = actualOrders.reduce((acc, product) => acc + product.price, 0);
-
     let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
 
     let order = {
@@ -215,28 +199,60 @@ export const createOrder = async (req, res) => {
     };
 
     let orderResult = await ordersService.createOrder(order);
-
     resultUser.orders.push(orderResult._id);
-
     await usersService.updateUser(userId, resultUser);
     res.send({ status: "success", orderResult });
 };
 
 export const resolveOrder = async (req, res) => {
-    const { id } = req.params;
-
-    const order = await ordersService.getOrderById(id);
+    const { oid } = req.params;
+    const order = await ordersService.getOrderById(oid);
 
     if (!order) {
         return res.status(404).send({ status: "error", error: "Order not found" });
     }
 
-
     order.status = "resolved";
-
     await ordersService.updateOrder(order._id, order);
     res.send({ status: "success", order });
 };
+
+// Nueva función para enviar correo
+export const sendOrderEmail = async (req, res) => {
+    const { oid } = req.params; // Obtener el ID de la orden de los parámetros de la URL
+    const order = await ordersService.getOrderById(oid);
+
+    if (!order) {
+        return res.status(404).send({ status: "error", error: "Order not found" });
+    }
+
+    try {
+        const result = await transport.sendMail({
+            from: "Cristian Osorio <cosoriogut@gmail.com>",
+            to: "cosoriogut@gmail.com",
+            subject: "Detalles de la Orden",
+            html: `
+                <div>
+                    <h1>Detalles de la Orden</h1>
+                    <p>Gracias por tu pedido!</p>
+                    <p>Detalles de la Orden:</p>
+                    <p>Número: ${order.number}</p>
+                    <p>Estado: ${order.status}</p>
+                    <p>Total: ${order.totalPrice}</p>
+                    <p>Productos: ${order.products.map(product => `<div>${product.name} - $${product.price}</div>`).join('')}</p>
+                </div>
+            `,
+            attachments: [] // Aquí puedes agregar archivos si lo necesitas
+        });
+
+        console.log('Correo enviado: ', result.messageId);
+        res.status(200).send('Correo enviado exitosamente');
+    } catch (error) {
+        console.error('Error al enviar el correo: ', error);
+        res.status(500).send('Error al enviar el correo');
+    }
+};
+
 
 
 
@@ -280,8 +296,6 @@ export const saveUser = async (req, res) => {
     let result = await usersService.saveUser(user)
     res.send({ status: "success", result })
 }
-
-
 
 
 
@@ -344,7 +358,6 @@ export default class Business {
         }
     }
 }
-
 
 
 
@@ -478,7 +491,6 @@ export default class User {
 
 
 
-
 src/dao/models/business.model.js
 import mongoose from "mongoose";
 
@@ -496,8 +508,6 @@ const schema = new mongoose.Schema({
 const businessModel = mongoose.model(collection, schema);
 
 export default businessModel;
-
-
 
 
 
@@ -551,10 +561,6 @@ export default orderModel
 
 
 
-
-
-
-
 src/dao/models/user.model.js
 import mongoose from "mongoose";
 
@@ -575,12 +581,6 @@ const schema = new mongoose.Schema({
 const userModel = mongoose.model(collection, schema)
 
 export default userModel
-
-
-
-
-
-
 
 
 
@@ -618,22 +618,21 @@ export default router
 
 
 
-
 src/routes/orders.router.js
-import { Router } from "express";
-import { getOrders, getOrderById, createOrder, resolveOrder } from '../controllers/orders.controller.js'
+import { Router } from 'express';
+import { getOrders, getOrderById, createOrder, resolveOrder, sendOrderEmail } from '../controllers/orders.controller.js';
 
-const router = Router()
+const router = Router();
 
-router.get('/', getOrders)
-router.post('/', createOrder)
-router.get('/:oid', getOrderById)
-router.put('/:oid', resolveOrder)
+router.get('/', getOrders); // Obtiene todas las órdenes
+router.get('/:oid', getOrderById); // Obtiene una orden específica por ID
+router.post('/', createOrder); // Crea una nueva orden
+router.put('/:oid', resolveOrder); // Resuelve una orden existente
 
-export default router
+// Nueva ruta para enviar detalles de la orden por correo
+router.get('/mail/order/:oid', sendOrderEmail); // Envía el correo con los detalles de la orden
 
-
-
+export default router;
 
 
 
@@ -656,7 +655,6 @@ router.get('/:uid', getUserById)
 router.post('/', saveUser)
 
 export default router
-
 
 
 
