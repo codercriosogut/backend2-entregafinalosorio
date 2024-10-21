@@ -26,11 +26,11 @@
 
 Describe your project
 
-## :sparkles: Features ##
+## .env ##
 
-:heavy_check_mark: Feature 1;\
-:heavy_check_mark: Feature 2;\
-:heavy_check_mark: Feature 3;
+- EMAIL_USER=cosoriogut@gmail.com
+- EMAIL_PASS=ccbq crle ovlp xtra
+- JWT_SECRET=mySuperSecretKey123!@#
 
 ## :rocket: Technologies ##
 
