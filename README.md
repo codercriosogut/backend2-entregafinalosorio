@@ -169,6 +169,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 ```
 ##
 # 2.- Negocios (/api/business)
+##
 ### a. Obtener todos los negocios
 - **Método**: GET
 - **URL**: `localhost:8080/api/business`
@@ -268,5 +269,19 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 {
     "status": "success",
     "result": "Business updated"
+}
+```
+##
+# 3.- Órdenes (/api/orders)
+##
+### a. Obtener todas las órdenes
+- **Método**: GET
+- **URL**: `localhost:8080/api/orders`
+- **Descripción**: Obtiene una lista de todas las órdenes.
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "orders": []
 }
 ```
