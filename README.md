@@ -388,7 +388,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 }
 ```
 #### Respuesta 2:
-```json
+```ini
 Correo enviado:  {
   accepted: [ 'cosoriogut@gmail.com' ],
   rejected: [],
