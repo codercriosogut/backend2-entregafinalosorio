@@ -173,6 +173,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 - **Método**: GET
 - **URL**: `localhost:8080/api/business`
 - **Descripción**: Obtiene una lista de todos los negocios.
+#### Respuesta:
 ```json
 {
     "status": "success",
@@ -196,5 +197,56 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
             ]
         }
     ]
+}
+```
+### b. Obtener un negocio por ID
+- **Método**: GET
+- **URL**: `localhost:8080/api/business/6715af4b5845dafea6506c85`
+- **Descripción**: Obtiene los detalles de un negocio específico.
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "result": {
+        "id": "6715af4b5845dafea6506c85",
+        "name": "mi-empresa",
+        "products": [
+            {
+                "id": "6715b19a5845dafea6506c87",
+                "name": "procesador i7",
+                "price": 200000,
+                "_id": "6715b19a5845dafea6506c89"
+            },
+            {
+                "id": "6715b54eb19aaa59fe8d1330",
+                "name": "ram 16gb",
+                "price": 50000,
+                "_id": "6715b54eb19aaa59fe8d1333"
+            }
+        ]
+    }
+}
+```
+### c. Crear un nuevo negocio
+- **Método**: POST
+- **URL**: `localhost:8080/api/business`
+- **CUERPO**: (JSON)
+- **Descripción**: Obtiene los detalles de un negocio específico.
+#### Enviar:
+```bash
+{
+    "name": "mi-empresa",
+    "products": []
+}
+```
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "result": {
+        "id": "6715af4b5845dafea6506c85",
+        "name": "mi-empresa",
+        "products": []
+    }
 }
 ```
