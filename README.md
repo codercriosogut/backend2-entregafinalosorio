@@ -411,7 +411,7 @@ Correo enviado:  {
 
 ```
 #### Respuesta 3:
-```json
+```css
 de:	Cristian Osorio <cosoriogut@gmail.com>
 para:	cosoriogut@gmail.com
 fecha:	20 oct 2024, 23:30
