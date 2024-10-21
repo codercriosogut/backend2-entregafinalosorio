@@ -110,7 +110,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 
 # 1.- Usuarios (/api/users)
 
-### a. Obtener todos los usuarios
+### A.- Obtener todos los usuarios
 - **Método**: GET
 - **URL**: `http://localhost:8080/api/users`
 - **Descripción**: Obtiene una lista de todos los usuarios.
@@ -130,7 +130,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 }
 ```
 
-### b. Obtener un usuario por ID
+### B.- Obtener un usuario por ID
 - **Método**: GET
 - **URL**: `localhost:8080/api/users/6715ad2aab4efdd29fad77c0`
 - **Descripción**: Obtiene los detalles de un usuario específico.
@@ -146,7 +146,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### c. Crear un nuevo usuario
+### C.- Crear un nuevo usuario
 - **Método**: POST
 - **URL**: `localhost:8080/api/users`
 - **CUERPO**: (JSON)
@@ -174,7 +174,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 ##
 # 2.- Negocios (/api/business)
 ##
-### a. Obtener todos los negocios
+### A.- Obtener todos los negocios
 - **Método**: GET
 - **URL**: `localhost:8080/api/business`
 - **Descripción**: Obtiene una lista de todos los negocios.
@@ -204,7 +204,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     ]
 }
 ```
-### b. Obtener un negocio por ID
+### B.- Obtener un negocio por ID
 - **Método**: GET
 - **URL**: `localhost:8080/api/business/6715af4b5845dafea6506c85`
 - **Descripción**: Obtiene los detalles de un negocio específico.
@@ -232,7 +232,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### c. Crear un nuevo negocio
+### C.- Crear un nuevo negocio
 - **Método**: POST
 - **URL**: `localhost:8080/api/business`
 - **CUERPO**: (JSON)
@@ -255,7 +255,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### d. Agregar un producto a un negocio
+### D.- Agregar un producto a un negocio
 - **Método**: POST
 - **URL**: `localhost:8080/api/business/6715af4b5845dafea6506c85/product`
 - **CUERPO**: (JSON)
@@ -278,7 +278,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 ##
 # 3.- Órdenes (/api/orders)
 ##
-### a. Obtener todas las órdenes
+### A.- Obtener todas las órdenes
 - **Método**: GET
 - **URL**: `localhost:8080/api/orders`
 - **Descripción**: Obtiene una lista de todas las órdenes.
@@ -289,7 +289,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     "orders": []
 }
 ```
-### b. Obtener una orden por ID
+### B.- Obtener una orden por ID
 - **Método**: GET
 - **URL**: `localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354`
 - **Descripción**: Obtiene los detalles de una orden específica.
@@ -315,7 +315,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### c. Crear una nueva orden
+### C.- Crear una nueva orden
 - **Método**: POST
 - **URL**: `http://localhost:8080/api/orders`
 - **CUERPO**: (JSON)
@@ -350,7 +350,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### d. Resolver una orden
+### D.- Resolver una orden
 - **Método**: PUT
 - **URL**: `localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354`
 - **Descripción**: Marca una orden como resuelta.
@@ -376,7 +376,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
-### e. Enviar correo con detalles de la orden
+### E.- Enviar correo con detalles de la orden
 - **Método**: GET
 - **URL**: `localhost:8080/api/orders/mail/order/6715b7f0b19aaa59fe8d1354`
 - **Descripción**: Envía un correo electrónico con los detalles de la orden.
