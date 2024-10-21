@@ -78,7 +78,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 
 
 ## Directorios ##
-```css
+```markdown
 📦src
 ┣ 📂controllers
 ┃ ┣ 📜business.controller.js
