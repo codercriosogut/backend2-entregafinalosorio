@@ -1,31 +1,32 @@
-<div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="v2" />
-
-  &#xa0;
-
-  <!-- <a href="https://class12arquitecturacompletomain.netlify.app">Demo</a> -->
-</div>
-
-<h1 align="center">v2</h1>
-
-
+<h1 align="center">Sistema de Gestión de Negocios, Órdenes y Usuarios</h1>
 
 <p align="center">
-  <a href="#dart-about">About</a> &#xa0; | &#xa0; 
-  <a href="#sparkles-features">Features</a> &#xa0; | &#xa0;
+  <a href="#acerca">Acerca</a> &#xa0; | &#xa0; 
+  <a href="#tecnologias">Tecnologías</a> &#xa0; | &#xa0;
   <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
   <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
-  <a href="#test-test">Test</a> &#xa0; | &#xa0;
+  <a href="#test">Test</a> &#xa0; | &#xa0;
   <a href="https://github.com/codercriosogut/backend2-entregafinalosorio.git" target="_blank">GitHub</a>
 </p>
 
 <br>
 
 
-## :dart: About ##
+## Acerca ##
 
-Describe your project
+Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de compra, incluyendo la creación de órdenes, la gestión de productos dentro de los negocios, y el envío de correos electrónicos con detalles de las órdenes utilizando Nodemailer.
+
+
+## Tecnologías ##
+- **Node.js**: Plataforma para la ejecución de JavaScript del lado del servidor.
+- **Express.js**: Framework para la creación de aplicaciones web y API REST.
+- **MongoDB**: Base de datos NoSQL para la persistencia de la información.
+- **Mongoose**: ODM (Object Data Modeling) para la conexión y manipulación de MongoDB.
+- **Nodemailer**: Librería para el envío de correos electrónicos.
+- **JWT (JSON Web Tokens)**: Para la autenticación y autorización.
+- **dotenv**: Manejo de variables de entorno.
+
 
 ## .env ##
 
@@ -107,7 +108,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 ```
 
 
-## :test: Test ##
+## Test ##
 
 # 1.- Usuarios (/api/users)
 
