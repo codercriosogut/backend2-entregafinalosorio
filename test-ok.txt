@@ -1,4 +1,0 @@
-version9
-- email y detalle de la compra ok
-- incremento no
-- 

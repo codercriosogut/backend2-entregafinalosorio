@@ -289,5 +289,25 @@ Total: $250000.00
 Productos
 procesador i7 - $200000.00 x undefined unidad(es)
 ram 16gb - $50000.00 x undefined unidad(es)
+-
+
+
+
+
+
+
+
+4. Autenticación (Opcional)
+Si tienes implementado un sistema de autenticación, también deberías probar los siguientes endpoints:
+
+a. Login
+Método: POST
+URL: http://localhost:8080/api/login (suponiendo que tengas esta ruta)
+Cuerpo (JSON):
+{
+    "email": "cristian-user@correo.com",
+    "password": "mySuperSecretKey123!@#"
+}
+
 
 
