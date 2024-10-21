@@ -1,6 +1,6 @@
-import Business from '../dao/classes/business.dao.js';
+import Business from '../dao_dto/classes/business.dao.js';
 import mongoose from 'mongoose';
-import { BusinessDTO } from '../dao/classes/business.dto.js';
+import { BusinessDTO } from '../dao_dto/classes/business.dto.js';
 
 const businessService = new Business();
 

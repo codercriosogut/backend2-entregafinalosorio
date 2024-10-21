@@ -28,7 +28,7 @@ const transport = nodemailer.createTransport({
 
 export { transport };
 
-mongoose.connect('mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0')
+mongoose.connect(process.env.MONGODB_URI)
     .then(() => console.log('Conexión a MongoDB establecida'))
     .catch(error => console.error('Error al conectar a MongoDB:', error));
 

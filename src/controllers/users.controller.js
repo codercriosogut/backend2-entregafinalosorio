@@ -1,5 +1,5 @@
-import User from '../dao/classes/user.dao.js';
-import { UserDTO } from '../dao/classes/user.dto.js';
+import User from '../dao_dto/classes/user.dao.js';
+import { UserDTO } from '../dao_dto/classes/user.dto.js';
 
 const userService = new User();
 

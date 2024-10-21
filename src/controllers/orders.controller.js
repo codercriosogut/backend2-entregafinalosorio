@@ -1,8 +1,8 @@
-import Order from '../dao/classes/order.dao.js';
-import Business from '../dao/classes/business.dao.js';
-import User from '../dao/classes/user.dao.js';
+import Order from '../dao_dto/classes/order.dao.js';
+import Business from '../dao_dto/classes/business.dao.js';
+import User from '../dao_dto/classes/user.dao.js';
 import { transport } from '../app.js';
-import { OrderDTO } from '../dao/classes/order.dto.js';
+import { OrderDTO } from '../dao_dto/classes/order.dto.js';
 
 const usersService = new User();
 const ordersService = new Order();

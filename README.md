@@ -35,6 +35,7 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 - EMAIL_USER=cosoriogut@gmail.com
 - EMAIL_PASS=ccbq crle ovlp xtra
 - JWT_SECRET=mySuperSecretKey123!@#
+- MONGODB_URI=mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0
 
 
 ## Instalacion ##
