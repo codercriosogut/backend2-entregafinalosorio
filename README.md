@@ -285,3 +285,64 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     "orders": []
 }
 ```
+### b. Obtener una orden por ID
+- **Método**: GET
+- **URL**: `localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354`
+- **Descripción**: Obtiene los detalles de una orden específica.
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "order": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "pending"
+    }
+}
+```
+### c. Crear una nueva orden
+- **Método**: POST
+- **URL**: `http://localhost:8080/api/orders`
+- **CUERPO**: (JSON)
+- **Descripción**: Obtiene los detalles de un negocio específico.
+#### Enviar:
+```bash
+{
+    "userId": "6715ad2aab4efdd29fad77c0",
+    "businessId": "6715af4b5845dafea6506c85",
+    "productIds": ["6715b19a5845dafea6506c87", "6715b54eb19aaa59fe8d1330"]
+}
+```
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "orderResult": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "pending"
+    }
+}
+```
