@@ -1,41 +1,20 @@
-import usersModel from "../models/user.model.js";
+import User from '../models/user.model.js';
 
-export default class User {
-    getUsers = async () => {
-        try {
-            let users = await usersModel.find()
-            return users
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+export default class UserDAO {
+    async getUsers() {
+        return await User.find({});
     }
 
-    getUserById = async (id) => {
-        try {
-            let user = await usersModel.findOne({ _id: id })
-            return user
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async getUserById(id) {
+        return await User.findById(id);
     }
 
-    saveUser = async (user) => {
-        try {
-            let result = await usersModel.create(user)
-            return result
-        } catch (error) {
-            console.log(error)
-        }
+    async saveUser(user) {
+        const newUser = new User(user);
+        return await newUser.save();
     }
 
-    updateUser = async (id, user) => {
-        try {
-            let result = await usersModel.updateOne({ _id: id }, { $set: user })
-            return result
-        } catch (error) {
-            console.log(error)
-        }
+    async updateUser(id, user) {
+        return await User.findByIdAndUpdate(id, user, { new: true });
     }
 }

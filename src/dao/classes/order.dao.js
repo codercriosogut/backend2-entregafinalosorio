@@ -1,45 +1,20 @@
-import ordersModel from "../models/order.model.js";
+import Order from '../models/order.model.js';
 
-export default class Order {
-
-    getOrders = async () => {
-        try {
-            let result = await ordersModel.find()
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+export default class OrderDAO {
+    async getOrders() {
+        return await Order.find({});
     }
 
-    getOrderById = async (id) => {
-        try {
-            let result = await ordersModel.findOne({ _id: id })
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async getOrderById(id) {
+        return await Order.findById(id);
     }
 
-    createOrder = async (order) => {
-        try {
-            let result = await ordersModel.create(order)
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async createOrder(order) {
+        const newOrder = new Order(order);
+        return await newOrder.save();
     }
 
-    resolveOrder = async (id, order) => {
-        try {
-            let result = await ordersModel.updateOne({ _id: id }, { $set: order })
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async updateOrder(id, order) {
+        return await Order.findByIdAndUpdate(id, order, { new: true });
     }
-
-} 
+}

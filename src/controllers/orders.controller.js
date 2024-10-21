@@ -2,6 +2,7 @@ import Order from '../dao/classes/order.dao.js';
 import Business from '../dao/classes/business.dao.js';
 import User from '../dao/classes/user.dao.js';
 import { transport } from '../app.js'; // Importa el transportador
+import { OrderDTO } from '../dao/classes/order.dto.js'; // Importa el DTO
 
 const usersService = new User();
 const ordersService = new Order();
@@ -9,7 +10,8 @@ const businessService = new Business();
 
 export const getOrders = async (req, res) => {
     const orders = await ordersService.getOrders();
-    res.send({ status: "success", orders });
+    const ordersDTO = orders.map(order => new OrderDTO(order)); // Convierte a DTO
+    res.send({ status: "success", orders: ordersDTO });
 };
 
 export const getOrderById = async (req, res) => {
@@ -20,7 +22,8 @@ export const getOrderById = async (req, res) => {
         return res.status(404).send({ status: "error", error: "Order not found" });
     }
 
-    res.send({ status: "success", order });
+    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    res.send({ status: "success", order: orderDTO });
 };
 
 export const createOrder = async (req, res) => {
@@ -58,7 +61,9 @@ export const createOrder = async (req, res) => {
     let orderResult = await ordersService.createOrder(order);
     resultUser.orders.push(orderResult._id);
     await usersService.updateUser(userId, resultUser);
-    res.send({ status: "success", orderResult });
+
+    const orderDTO = new OrderDTO(orderResult); // Convierte a DTO
+    res.send({ status: "success", orderResult: orderDTO });
 };
 
 export const resolveOrder = async (req, res) => {
@@ -71,7 +76,8 @@ export const resolveOrder = async (req, res) => {
 
     order.status = "resolved";
     await ordersService.updateOrder(order._id, order);
-    res.send({ status: "success", order });
+    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    res.send({ status: "success", order: orderDTO });
 };
 
 // Nueva función para enviar correo
@@ -89,23 +95,33 @@ export const sendOrderEmail = async (req, res) => {
             to: "cosoriogut@gmail.com",
             subject: "Detalles de la Orden",
             html: `
-                <div>
-                    <h1>Detalles de la Orden</h1>
-                    <p>Gracias por tu pedido!</p>
-                    <p>Detalles de la Orden:</p>
-                    <p>Número: ${order.number}</p>
-                    <p>Estado: ${order.status}</p>
-                    <p>Total: ${order.totalPrice}</p>
-                    <p>Productos: ${order.products.map(product => `<div>${product.name} - $${product.price}</div>`).join('')}</p>
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h1 style="background-color: #f8f9fa; padding: 10px; text-align: center;">Detalles de la Orden</h1>
+                    <p>¡Gracias por tu pedido!</p>
+                    <h2>Resumen de la Orden</h2>
+                    <p><strong>Número de Orden:</strong> ${order.number}</p>
+                    <p><strong>Estado:</strong> ${order.status}</p>
+                    <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
+                    <h3>Productos</h3>
+                    <ul>
+                        ${order.products.map(product => `
+                            <li>
+                                <strong>${product.name}</strong> - 
+                                $${product.price.toFixed(2)} x ${product.quantity} unidad(es)
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <hr>
+                    <p style="text-align: center;">¡Gracias por comprar con nosotros!</p>
                 </div>
             `,
             attachments: [] // Aquí puedes agregar archivos si lo necesitas
         });
 
-        console.log('Correo enviado: ', result.messageId);
-        res.status(200).send('Correo enviado exitosamente');
+        console.log('Correo enviado: ', result);
+        res.send({ status: 'success', message: 'Email sent' });
     } catch (error) {
         console.error('Error al enviar el correo: ', error);
-        res.status(500).send('Error al enviar el correo');
+        res.status(500).send({ status: 'error', message: 'Failed to send email' });
     }
 };

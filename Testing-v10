@@ -1,0 +1,293 @@
+1. Usuarios (/api/users)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+-
+a. Obtener todos los usuarios
+Método: GET
+URL: http://localhost:8080/api/users
+Descripción: Obtiene una lista de todos los usuarios.
+#RESPUESTA#
+{
+    "status": "success",
+    "users": [
+        {
+            "id": "6715ad2aab4efdd29fad77c0",
+            "name": "cristian",
+            "email": "cristian@correo.com",
+            "orders": []
+        }
+    ]
+}
+-
+b. Obtener un usuario por ID
+Método: GET
+URL: http://localhost:8080/api/users/6715ad2aab4efdd29fad77c0
+Descripción: Obtiene los detalles de un usuario específico.
+#RESPUESTA#
+{
+    "status": "success",
+    "user": {
+        "id": "6715ad2aab4efdd29fad77c0",
+        "name": "cristian",
+        "email": "cristian@correo.com",
+        "orders": []
+    }
+}
+-
+c. Crear un nuevo usuario
+Método: POST
+URL: http://localhost:8080/api/users
+Cuerpo (JSON):
+{
+    "name":"cristian",
+    "email":"cristian@correo.com",
+    "password": "mySuperSecretKey123!@#"
+}
+#RESPUESTA#
+{
+    "status": "success",
+    "user": {
+        "id": "6715ad2aab4efdd29fad77c0",
+        "name": "cristian",
+        "email": "cristian@correo.com",
+        "orders": []
+    }
+}
+
+2. Negocios (/api/business)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+a. Obtener todos los negocios
+Método: GET
+URL: http://localhost:8080/api/business
+Descripción: Obtiene una lista de todos los negocios.
+#RESPUESTA#
+{
+    "status": "success",
+    "result": [
+        {
+            "id": "6715af4b5845dafea6506c85",
+            "name": "mi-empresa",
+            "products": [
+                {
+                    "id": "6715b19a5845dafea6506c87",
+                    "name": "procesador i7",
+                    "price": 200000,
+                    "_id": "6715b19a5845dafea6506c89"
+                },
+                {
+                    "id": "6715b54eb19aaa59fe8d1330",
+                    "name": "ram 16gb",
+                    "price": 50000,
+                    "_id": "6715b54eb19aaa59fe8d1333"
+                }
+            ]
+        }
+    ]
+}
+-
+b. Obtener un negocio por ID
+Método: GET
+URL: http://localhost:8080/api/business/6715af4b5845dafea6506c85
+Descripción: Obtiene los detalles de un negocio específico.
+#RESPUESTA#
+{
+    "status": "success",
+    "result": {
+        "id": "6715af4b5845dafea6506c85",
+        "name": "mi-empresa",
+        "products": [
+            {
+                "id": "6715b19a5845dafea6506c87",
+                "name": "procesador i7",
+                "price": 200000,
+                "_id": "6715b19a5845dafea6506c89"
+            },
+            {
+                "id": "6715b54eb19aaa59fe8d1330",
+                "name": "ram 16gb",
+                "price": 50000,
+                "_id": "6715b54eb19aaa59fe8d1333"
+            }
+        ]
+    }
+}
+-
+c. Crear un nuevo negocio
+Método: POST
+URL: http://localhost:8080/api/business
+Cuerpo (JSON):
+{
+    "name": "mi-empresa",
+    "products": []
+}
+#RESPUESTA#
+{
+    "status": "success",
+    "result": {
+        "id": "6715af4b5845dafea6506c85",
+        "name": "mi-empresa",
+        "products": []
+    }
+}
+-
+d. Agregar un producto a un negocio
+Método: POST
+URL: http://localhost:8080/api/business/6715af4b5845dafea6506c85/product
+Cuerpo (JSON):
+{
+    "name": "procesador i7",
+    "price": 200000,
+    "quantity": 10
+}
+#RESPUESTA#
+{
+    "status": "success",
+    "result": "Business updated"
+}
+
+
+
+
+
+3. Órdenes (/api/orders)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+a. Obtener todas las órdenes
+Método: GET
+URL: http://localhost:8080/api/orders
+Descripción: Obtiene una lista de todas las órdenes.
+#RESPUESTA#
+{
+    "status": "success",
+    "orders": []
+}
+-
+b. Obtener una orden por ID
+Método: GET
+URL: http://localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354
+Descripción: Obtiene los detalles de una orden específica.
+#RESPUESTA#
+{
+    "status": "success",
+    "order": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "pending"
+    }
+}
+-
+c. Crear una nueva orden
+Método: POST
+URL: http://localhost:8080/api/orders
+Cuerpo (JSON):
+{
+    "userId": "6715ad2aab4efdd29fad77c0",
+    "businessId": "6715af4b5845dafea6506c85",
+    "productIds": ["6715b19a5845dafea6506c87", "6715b54eb19aaa59fe8d1330"]
+}
+#RESPUESTA#
+{
+    "status": "success",
+    "orderResult": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "pending"
+    }
+}
+-
+d. Resolver una orden
+Método: PUT
+URL: http://localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354
+Descripción: Marca una orden como resuelta.
+#RESPUESTA#
+{
+    "status": "success",
+    "order": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "resolved"
+    }
+}
+-
+e. Enviar correo con detalles de la orden
+Método: GET
+URL: http://localhost:8080/api/orders/mail/order/6715b7f0b19aaa59fe8d1354
+Descripción: Envía un correo electrónico con los detalles de la orden.
+#RESPUESTA-1#
+{
+    "status": "success",
+    "message": "Email sent"
+}
+#RESPUESTA-2#
+Correo enviado:  {
+  accepted: [ 'cosoriogut@gmail.com' ],
+  rejected: [],
+  ehlo: [
+    'SIZE 35882577',
+    '8BITMIME',
+    'AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH',
+    'ENHANCEDSTATUSCODES',
+    'PIPELINING',
+    'CHUNKING',
+    'SMTPUTF8'
+  ],
+  envelopeTime: 693,
+  messageTime: 901,
+  messageSize: 1592,
+  response: '250 2.0.0 OK  1729477822 41be03b00d2f7-7eaeabdb784sm1882951a12.91 - gsmtp',
+  envelope: { from: 'cosoriogut@gmail.com', to: [ 'cosoriogut@gmail.com' ] },
+  messageId: '<2d412a42-3933-45e4-cc8b-33bd99201894@gmail.com>'
+}
+#RESPUESTA-3#
+de:	Cristian Osorio <cosoriogut@gmail.com>
+para:	cosoriogut@gmail.com
+fecha:	20 oct 2024, 23:30
+asunto:	Detalles de la Orden
+enviado por:	gmail.com
+Detalles de la Orden
+¡Gracias por tu pedido!
+
+Resumen de la Orden
+Número de Orden: 1729476597052
+
+Estado: resolved
+
+Total: $250000.00
+
+Productos
+procesador i7 - $200000.00 x undefined unidad(es)
+ram 16gb - $50000.00 x undefined unidad(es)
+
+

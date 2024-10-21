@@ -1,43 +1,20 @@
-import businessModel from '../models/business.model.js'
+import Business from '../models/business.model.js';
 
-export default class Business {
-    getBusiness = async () => {
-        try {
-            let result = await businessModel.find()
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+export default class BusinessDAO {
+    async getBusiness() {
+        return await Business.find({});
     }
 
-    getBusinessById = async (id) => {
-        try {
-            let result = await businessModel.findOne({ _id: id })
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async getBusinessById(id) {
+        return await Business.findById(id);
     }
 
-    saveBusiness = async (business) => {
-        try {
-            let result = await businessModel.create(business)
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async saveBusiness(business) {
+        const newBusiness = new Business(business);
+        return await newBusiness.save();
     }
 
-    updateBusiness = async (id, business) => {
-        try {
-            let result = await businessModel.updateOne({ _id: id }, { $set: business })
-            return result
-        } catch (error) {
-            console.log(error)
-            return null
-        }
+    async updateBusiness(id, business) {
+        return await Business.findByIdAndUpdate(id, business, { new: true });
     }
 }

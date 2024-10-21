@@ -6,6 +6,7 @@ import businessRouter from './routes/business.router.js';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
+import { authMiddleware } from './middlewares.js'; // Importa el middleware de autorización
 
 dotenv.config();
 
@@ -39,6 +40,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Rutas con middleware de autorización
 app.use('/api/users', usersRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/orders', ordersRouter);
