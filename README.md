@@ -388,8 +388,7 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 }
 ```
 #### Respuesta 2:
-```json
-{
+```markdown
 Correo enviado:  {
   accepted: [ 'cosoriogut@gmail.com' ],
   rejected: [],
@@ -409,7 +408,7 @@ Correo enviado:  {
   envelope: { from: 'cosoriogut@gmail.com', to: [ 'cosoriogut@gmail.com' ] },
   messageId: '<2d412a42-3933-45e4-cc8b-33bd99201894@gmail.com>'
 }
-}
+
 ```
 #### Respuesta 3:
 ```json
