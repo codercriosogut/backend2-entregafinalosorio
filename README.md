@@ -376,26 +376,6 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 - **Método**: GET
 - **URL**: `localhost:8080/api/orders/mail/order/6715b7f0b19aaa59fe8d1354`
 - **Descripción**: Envía un correo electrónico con los detalles de la orden.
-```json
-de:	Cristian Osorio <cosoriogut@gmail.com>
-para:	cosoriogut@gmail.com
-fecha:	20 oct 2024, 23:30
-asunto:	Detalles de la Orden
-enviado por:	gmail.com
-Detalles de la Orden
-¡Gracias por tu pedido!
-
-Resumen de la Orden
-Número de Orden: 1729476597052
-
-Estado: resolved
-
-Total: $250000.00
-
-Productos
-procesador i7 - $200000.00 x undefined unidad(es)
-ram 16gb - $50000.00 x undefined unidad(es)
-```
 #### Respuesta 1:
 ```json
 {
