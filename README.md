@@ -22,6 +22,7 @@
 
 <br>
 
+
 ## :dart: About ##
 
 Describe your project
@@ -76,16 +77,24 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 <a href="#top">Back to top</a>
 
 
+## Directorios ##
+
+```json
 📦src
- ┣ 📂controllers
+- ┣ 📂controllers
  ┃ ┣ 📜business.controller.js
  ┃ ┣ 📜orders.controller.js
  ┃ ┗ 📜users.controller.js
  ┣ 📂dao
  ┃ ┣ 📂classes
  ┃ ┃ ┣ 📜business.dao.js
+ ┃ ┃ ┣ 📜business.dto.js
  ┃ ┃ ┣ 📜order.dao.js
- ┃ ┃ ┗ 📜user.dao.js
+ ┃ ┃ ┣ 📜order.dto.js
+ ┃ ┃ ┣ 📜ticket.dao.js
+ ┃ ┃ ┣ 📜ticket.model.js
+ ┃ ┃ ┣ 📜user.dao.js
+ ┃ ┃ ┗ 📜user.dto.js
  ┃ ┗ 📂models
  ┃ ┃ ┣ 📜business.model.js
  ┃ ┃ ┣ 📜order.model.js
@@ -94,13 +103,10 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
  ┃ ┣ 📜business.router.js
  ┃ ┣ 📜orders.router.js
  ┃ ┗ 📜users.router.js
- ┗ 📜app.js
+ ┣ 📜app.js
+ ┗ 📜middlewares.js
 
-
-
-
-
-
+```
 
 ## Testing API ##
 
