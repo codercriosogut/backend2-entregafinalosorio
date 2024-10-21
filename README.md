@@ -15,7 +15,7 @@
 
 ## Acerca ##
 
-Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de compra, incluyendo la creación de órdenes, la gestión de productos dentro de los negocios, y el envío de correos electrónicos con detalles de las órdenes utilizando Nodemailer.
+Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de compra, incluyendo la creación de órdenes, la gestión de productos dentro de los negocios, y el envío de correos electrónicos con detalles de las órdenes utilizando Nodemailer. La estructura del proyecto sigue una arquitectura organizada en capas (controladores, servicios DAO y DTO) para facilitar el mantenimiento y la escalabilidad.
 
 
 ## Tecnologias ##
@@ -468,10 +468,10 @@ ram 16gb - $50000.00 x undefined unidad(es)
 ```
 
 
-# 3.- cloud.mongodb
+# 4.- cloud.mongodb
 
 
 #### cloud.mongodb
 ```markdown
-![alt text](image.png)
+![businesses](/test/image01.png)
 ```
