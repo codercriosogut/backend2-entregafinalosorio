@@ -1,12 +1,12 @@
 <div align="center" id="top"> 
-  <img src="./.github/app.gif" alt="v1" />
+  <img src="./.github/app.gif" alt="v2" />
 
   &#xa0;
 
   <!-- <a href="https://class12arquitecturacompletomain.netlify.app">Demo</a> -->
 </div>
 
-<h1 align="center">v1</h1>
+<h1 align="center">v2</h1>
 
 
 
