@@ -1,9 +1,11 @@
 <h1 align="center">Sistema de Gestión de Negocios, Órdenes y Usuarios</h1>
-
+<div align="center" id="top"> 
+  <img src="./test/logo.png" alt="logo" />
+</div>
 <p align="center">
   <a href="#acerca">Acerca</a> &#xa0; | &#xa0; 
   <a href="#tecnologias">Tecnologias</a> &#xa0; | &#xa0;
-  <a href="#a">a</a> &#xa0; | &#xa0;
+  <a href="#env">env</a> &#xa0; | &#xa0;
   <a href="#instalacion">Instalacion</a> &#xa0; | &#xa0;
   <a href="#rutas">Rutas</a> &#xa0; | &#xa0;
   <a href="#test">Test</a> &#xa0; | &#xa0;
@@ -33,34 +35,6 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 - EMAIL_USER=cosoriogut@gmail.com
 - EMAIL_PASS=ccbq crle ovlp xtra
 - JWT_SECRET=mySuperSecretKey123!@#
-
-## :rocket: Technologies ##
-
-The following tools were used in this project:
-
-- [Expo](https://expo.io/)
-- [Node.js](https://nodejs.org/en/)
-- [React](https://pt-br.reactjs.org/)
-- [React Native](https://reactnative.dev/)
-- [TypeScript](https://www.typescriptlang.org/)
-
-## :white_check_mark: Requirements ##
-
-Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
-
-
-## :memo: License ##
-
-This project is under license from MIT. For more details, see the [LICENSE](LICENSE.md) file.
-
-
-Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" target="_blank">{{YOUR_NAME}}</a>
-
-&#xa0;
-
-<a href="#top">Back to top</a>
-
-
 
 
 ## Instalacion ##
