@@ -3,9 +3,9 @@
 <p align="center">
   <a href="#acerca">Acerca</a> &#xa0; | &#xa0; 
   <a href="#tecnologias">Tecnologias</a> &#xa0; | &#xa0;
-  <a href="#rutas">Rutas</a> &#xa0; | &#xa0;
-  <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
+  <a href="#a">a</a> &#xa0; | &#xa0;
   <a href="#instalacion">Instalacion</a> &#xa0; | &#xa0;
+  <a href="#rutas">Rutas</a> &#xa0; | &#xa0;
   <a href="#test">Test</a> &#xa0; | &#xa0;
   <a href="https://github.com/codercriosogut/backend2-entregafinalosorio.git" target="_blank">GitHub</a>
 </p>
@@ -26,26 +26,6 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 - **Nodemailer**: Librería para el envío de correos electrónicos.
 - **JWT (JSON Web Tokens)**: Para la autenticación y autorización.
 - **dotenv**: Manejo de variables de entorno.
-
-## Rutas ##
-
-### Usuarios
-- `GET /api/users`: Obtiene la lista de usuarios.
-- `GET /api/users/:uid`: Obtiene los detalles de un usuario por ID.
-- `POST /api/users`: Crea un nuevo usuario.
-
-### Negocios
-- `GET /api/business`: Obtiene la lista de negocios.
-- `GET /api/business/:bid`: Obtiene los detalles de un negocio por ID.
-- `POST /api/business`: Crea un nuevo negocio.
-- `POST /api/business/:bid/product`: Añade un producto a un negocio.
-
-### Órdenes
-- `GET /api/orders`: Obtiene la lista de órdenes.
-- `GET /api/orders/:oid`: Obtiene los detalles de una orden por ID.
-- `POST /api/orders`: Crea una nueva orden.
-- `POST /api/orders/:oid/resolve`: Marca una orden como resuelta.
-- `GET /mail/order/:oid`: Envía un correo electrónico con los detalles de la orden.
 
 
 ## .env ##
@@ -68,23 +48,6 @@ The following tools were used in this project:
 
 Before starting :checkered_flag:, you need to have [Git](https://git-scm.com) and [Node](https://nodejs.org/en/) installed.
 
-## :checkered_flag: Starting ##
-
-```bash
-# Clone this project
-$ git clone https://github.com/codercriosogut/backend2-entregafinalosorio.git
-
-# Access
-$ cd v1
-
-# Install dependencies
-$ yarn
-
-# Run the project
-$ yarn start
-
-# The server will initialize in the <http://localhost:3000>
-```
 
 ## :memo: License ##
 
@@ -102,23 +65,50 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 
 ## Instalacion ##
 
-1. Clona este repositorio:
 ```bash
-# Clone this project
+# Clonar repositorio:
 $ git clone https://github.com/codercriosogut/backend2-entregafinalosorio
 
-# Access
-$ cd v1
+# Accede al directorio del proyecto:
+$ cd .\backend2-entregafinalosorio\
 
-# Install dependencies
-$ yarn
+# Instala las dependencias:
+$ npm install
+$ npm list
 
-# Run the project
-$ yarn start
+├── cors@2.8.5
+├── dotenv@16.4.5
+├── express@4.19.2
+├── jsonwebtoken@9.0.2
+├── mongoose@8.3.2
+└── nodemailer@6.9.15
 
-# The server will initialize in the <http://localhost:3000>
+# Ejecuta el servidor
+$ npm start
+
+# Utilizar Postman
 ```
 
+## Rutas ## 
+### POSTMAN
+
+### Usuarios
+- `GET /api/users`: Obtiene la lista de usuarios.
+- `GET /api/users/:uid`: Obtiene los detalles de un usuario por ID.
+- `POST /api/users`: Crea un nuevo usuario.
+
+### Negocios
+- `GET /api/business`: Obtiene la lista de negocios.
+- `GET /api/business/:bid`: Obtiene los detalles de un negocio por ID.
+- `POST /api/business`: Crea un nuevo negocio.
+- `POST /api/business/:bid/product`: Añade un producto a un negocio.
+
+### Órdenes
+- `GET /api/orders`: Obtiene la lista de órdenes.
+- `GET /api/orders/:oid`: Obtiene los detalles de una orden por ID.
+- `POST /api/orders`: Crea una nueva orden.
+- `POST /api/orders/:oid/resolve`: Marca una orden como resuelta.
+- `GET /mail/order/:oid`: Envía un correo electrónico con los detalles de la orden.
 
 
 ## Directorios ##
