@@ -12,7 +12,7 @@ export const authMiddleware = (req, res, next) => {
             return res.status(403).send({ status: 'error', error: 'Invalid token' });
         }
 
-        req.user = decoded; // Decodifica el token para extraer información del usuario
+        req.user = decoded;
         next();
     });
 };
