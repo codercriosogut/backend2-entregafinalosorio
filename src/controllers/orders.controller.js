@@ -1,8 +1,8 @@
 import Order from '../dao/classes/order.dao.js';
 import Business from '../dao/classes/business.dao.js';
 import User from '../dao/classes/user.dao.js';
-import { transport } from '../app.js'; // Importa el transportador
-import { OrderDTO } from '../dao/classes/order.dto.js'; // Importa el DTO
+import { transport } from '../app.js';
+import { OrderDTO } from '../dao/classes/order.dto.js';
 
 const usersService = new User();
 const ordersService = new Order();
@@ -10,7 +10,7 @@ const businessService = new Business();
 
 export const getOrders = async (req, res) => {
     const orders = await ordersService.getOrders();
-    const ordersDTO = orders.map(order => new OrderDTO(order)); // Convierte a DTO
+    const ordersDTO = orders.map(order => new OrderDTO(order));
     res.send({ status: "success", orders: ordersDTO });
 };
 
@@ -22,7 +22,7 @@ export const getOrderById = async (req, res) => {
         return res.status(404).send({ status: "error", error: "Order not found" });
     }
 
-    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    const orderDTO = new OrderDTO(order);
     res.send({ status: "success", order: orderDTO });
 };
 
@@ -62,7 +62,7 @@ export const createOrder = async (req, res) => {
     resultUser.orders.push(orderResult._id);
     await usersService.updateUser(userId, resultUser);
 
-    const orderDTO = new OrderDTO(orderResult); // Convierte a DTO
+    const orderDTO = new OrderDTO(orderResult);
     res.send({ status: "success", orderResult: orderDTO });
 };
 
@@ -76,13 +76,12 @@ export const resolveOrder = async (req, res) => {
 
     order.status = "resolved";
     await ordersService.updateOrder(order._id, order);
-    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    const orderDTO = new OrderDTO(order);
     res.send({ status: "success", order: orderDTO });
 };
 
-// Nueva función para enviar correo
 export const sendOrderEmail = async (req, res) => {
-    const { oid } = req.params; // Obtener el ID de la orden de los parámetros de la URL
+    const { oid } = req.params;
     const order = await ordersService.getOrderById(oid);
 
     if (!order) {
@@ -115,9 +114,8 @@ export const sendOrderEmail = async (req, res) => {
                     <p style="text-align: center;">¡Gracias por comprar con nosotros!</p>
                 </div>
             `,
-            attachments: [] // Aquí puedes agregar archivos si lo necesitas
+            attachments: []
         });
-
         console.log('Correo enviado: ', result);
         res.send({ status: 'success', message: 'Email sent' });
     } catch (error) {

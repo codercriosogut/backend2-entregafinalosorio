@@ -37,20 +37,18 @@ import businessRouter from './routes/business.router.js';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import { authMiddleware } from './middlewares.js'; // Importa el middleware de autorización
+import { authMiddleware } from './middlewares.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = 8080;
 
-// Verificación de variables de entorno
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.error('Error: Configuración de correo no definida en las variables de entorno');
     process.exit(1);
 }
 
-// Configuración del transportador de Nodemailer
 const transport = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -59,10 +57,8 @@ const transport = nodemailer.createTransport({
     }
 });
 
-// Exporta el transportador para usar en otros archivos
 export { transport };
 
-// Conexión a MongoDB
 mongoose.connect('mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0')
     .then(() => console.log('Conexión a MongoDB establecida'))
     .catch(error => console.error('Error al conectar a MongoDB:', error));
@@ -71,7 +67,6 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Rutas con middleware de autorización
 app.use('/api/users', usersRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/orders', ordersRouter);
@@ -79,6 +74,9 @@ app.use('/api/orders', ordersRouter);
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+
+
 
 
 
@@ -105,7 +103,7 @@ export const authMiddleware = (req, res, next) => {
             return res.status(403).send({ status: 'error', error: 'Invalid token' });
         }
 
-        req.user = decoded; // Decodifica el token para extraer información del usuario
+        req.user = decoded;
         next();
     });
 };
@@ -128,17 +126,17 @@ export const authMiddleware = (req, res, next) => {
 
 
 
+
 src/controllers/business.controller.js
 import Business from '../dao/classes/business.dao.js';
 import mongoose from 'mongoose';
-import { BusinessDTO } from '../dao/classes/business.dto.js'; // Importa el DTO
+import { BusinessDTO } from '../dao/classes/business.dto.js';
 
 const businessService = new Business();
 
 export const getBusiness = async (req, res) => {
     let result = await businessService.getBusiness();
     if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
-    // Convierte a DTO antes de enviar
     const businessDTO = result.map(b => new BusinessDTO(b));
     res.send({ status: "success", result: businessDTO });
 };
@@ -147,7 +145,6 @@ export const getBusinessById = async (req, res) => {
     const { bid } = req.params;
     let result = await businessService.getBusinessById(bid);
     if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
-    // Convierte a DTO antes de enviar
     const businessDTO = new BusinessDTO(result);
     res.send({ status: "success", result: businessDTO });
 };
@@ -156,7 +153,6 @@ export const createBusiness = async (req, res) => {
     const business = req.body;
     let result = await businessService.saveBusiness(business);
     if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
-    // Convierte a DTO antes de enviar
     const businessDTO = new BusinessDTO(result);
     res.send({ status: "success", result: businessDTO });
 };
@@ -165,12 +161,11 @@ export const addProduct = async (req, res) => {
     let product = req.body;
     product.id = new mongoose.Types.ObjectId();
     let business = await businessService.getBusinessById(req.params.bid);
-
     business.products.push(product);
     await businessService.updateBusiness(business._id, business);
-
     res.send({ status: "success", result: "Business updated" });
 };
+
 
 
 
@@ -191,8 +186,8 @@ src/controllers/orders.controller.js
 import Order from '../dao/classes/order.dao.js';
 import Business from '../dao/classes/business.dao.js';
 import User from '../dao/classes/user.dao.js';
-import { transport } from '../app.js'; // Importa el transportador
-import { OrderDTO } from '../dao/classes/order.dto.js'; // Importa el DTO
+import { transport } from '../app.js';
+import { OrderDTO } from '../dao/classes/order.dto.js';
 
 const usersService = new User();
 const ordersService = new Order();
@@ -200,7 +195,7 @@ const businessService = new Business();
 
 export const getOrders = async (req, res) => {
     const orders = await ordersService.getOrders();
-    const ordersDTO = orders.map(order => new OrderDTO(order)); // Convierte a DTO
+    const ordersDTO = orders.map(order => new OrderDTO(order));
     res.send({ status: "success", orders: ordersDTO });
 };
 
@@ -212,7 +207,7 @@ export const getOrderById = async (req, res) => {
         return res.status(404).send({ status: "error", error: "Order not found" });
     }
 
-    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    const orderDTO = new OrderDTO(order);
     res.send({ status: "success", order: orderDTO });
 };
 
@@ -252,7 +247,7 @@ export const createOrder = async (req, res) => {
     resultUser.orders.push(orderResult._id);
     await usersService.updateUser(userId, resultUser);
 
-    const orderDTO = new OrderDTO(orderResult); // Convierte a DTO
+    const orderDTO = new OrderDTO(orderResult);
     res.send({ status: "success", orderResult: orderDTO });
 };
 
@@ -266,13 +261,12 @@ export const resolveOrder = async (req, res) => {
 
     order.status = "resolved";
     await ordersService.updateOrder(order._id, order);
-    const orderDTO = new OrderDTO(order); // Convierte a DTO
+    const orderDTO = new OrderDTO(order);
     res.send({ status: "success", order: orderDTO });
 };
 
-// Nueva función para enviar correo
 export const sendOrderEmail = async (req, res) => {
-    const { oid } = req.params; // Obtener el ID de la orden de los parámetros de la URL
+    const { oid } = req.params;
     const order = await ordersService.getOrderById(oid);
 
     if (!order) {
@@ -305,9 +299,8 @@ export const sendOrderEmail = async (req, res) => {
                     <p style="text-align: center;">¡Gracias por comprar con nosotros!</p>
                 </div>
             `,
-            attachments: [] // Aquí puedes agregar archivos si lo necesitas
+            attachments: []
         });
-
         console.log('Correo enviado: ', result);
         res.send({ status: 'success', message: 'Email sent' });
     } catch (error) {
@@ -339,15 +332,16 @@ export const sendOrderEmail = async (req, res) => {
 
 
 
+
 src/controllers/users.controller.js
 import User from '../dao/classes/user.dao.js';
-import { UserDTO } from '../dao/classes/user.dto.js'; // Importa el DTO
+import { UserDTO } from '../dao/classes/user.dto.js';
 
 const userService = new User();
 
 export const getUsers = async (req, res) => {
     let users = await userService.getUsers();
-    const usersDTO = users.map(user => new UserDTO(user)); // Convierte a DTO
+    const usersDTO = users.map(user => new UserDTO(user));
     res.send({ status: "success", users: usersDTO });
 };
 
@@ -355,7 +349,7 @@ export const getUserById = async (req, res) => {
     const { uid } = req.params;
     let user = await userService.getUserById(uid);
     if (!user) return res.status(404).send({ status: "error", error: "User not found" });
-    const userDTO = new UserDTO(user); // Convierte a DTO
+    const userDTO = new UserDTO(user);
     res.send({ status: "success", user: userDTO });
 };
 
@@ -363,7 +357,7 @@ export const createUser = async (req, res) => {
     const user = req.body;
     let result = await userService.saveUser(user);
     if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
-    const userDTO = new UserDTO(result); // Convierte a DTO
+    const userDTO = new UserDTO(result);
     res.send({ status: "success", user: userDTO });
 };
 
@@ -420,6 +414,7 @@ export default class BusinessDAO {
 
 
 
+
 src/dao/classes/business.dto.js
 export class BusinessDTO {
     constructor(business) {
@@ -428,6 +423,7 @@ export class BusinessDTO {
         this.products = business.products;
     }
 }
+
 
 
 
@@ -490,13 +486,14 @@ export default class OrderDAO {
 
 
 
+
 src/dao/classes/order.dto.js
 export class OrderDTO {
     constructor(order) {
         this.id = order._id;
         this.number = order.number;
-        this.business = order.business.name; // Se asume que business tiene un campo "name"
-        this.user = order.user.name; // Se asume que user tiene un campo "name"
+        this.business = order.business.name;
+        this.user = order.user.name;
         this.products = order.products.map(product => ({
             name: product.name,
             price: product.price,
@@ -506,6 +503,7 @@ export class OrderDTO {
         this.status = order.status;
     }
 }
+
 
 
 
@@ -533,6 +531,7 @@ export default class TicketDAO {
         return await Ticket.find({ userId });
     }
 }
+
 
 
 
@@ -580,6 +579,7 @@ export default mongoose.model('Ticket', ticketSchema);
 
 
 
+
 src/dao/classes/user.dao.js
 import User from '../models/user.model.js';
 
@@ -601,6 +601,7 @@ export default class UserDAO {
         return await User.findByIdAndUpdate(id, user, { new: true });
     }
 }
+
 
 
 
@@ -658,6 +659,10 @@ const schema = new mongoose.Schema({
 const businessModel = mongoose.model(collection, schema);
 
 export default businessModel;
+
+
+
+
 
 
 
@@ -778,15 +783,17 @@ import { getOrders, getOrderById, createOrder, resolveOrder, sendOrderEmail } fr
 
 const router = Router();
 
-router.get('/', getOrders); // Obtiene todas las órdenes
-router.get('/:oid', getOrderById); // Obtiene una orden específica por ID
-router.post('/', createOrder); // Crea una nueva orden
-router.put('/:oid', resolveOrder); // Resuelve una orden existente
-
-// Nueva ruta para enviar detalles de la orden por correo
-router.get('/mail/order/:oid', sendOrderEmail); // Envía el correo con los detalles de la orden
+router.get('/', getOrders);
+router.get('/:oid', getOrderById);
+router.post('/', createOrder);
+router.put('/:oid', resolveOrder);
+router.get('/mail/order/:oid', sendOrderEmail);
 
 export default router;
+
+
+
+
 
 
 
@@ -811,6 +818,7 @@ router.get('/:uid', getUserById)
 router.post('/', createUser)
 
 export default router
+
 
 
 
@@ -862,6 +870,7 @@ package.json
     "nodemailer": "^6.9.15"
   }
 }
+
 
 
 

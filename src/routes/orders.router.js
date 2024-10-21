@@ -3,12 +3,10 @@ import { getOrders, getOrderById, createOrder, resolveOrder, sendOrderEmail } fr
 
 const router = Router();
 
-router.get('/', getOrders); // Obtiene todas las órdenes
-router.get('/:oid', getOrderById); // Obtiene una orden específica por ID
-router.post('/', createOrder); // Crea una nueva orden
-router.put('/:oid', resolveOrder); // Resuelve una orden existente
-
-// Nueva ruta para enviar detalles de la orden por correo
-router.get('/mail/order/:oid', sendOrderEmail); // Envía el correo con los detalles de la orden
+router.get('/', getOrders);
+router.get('/:oid', getOrderById);
+router.post('/', createOrder);
+router.put('/:oid', resolveOrder);
+router.get('/mail/order/:oid', sendOrderEmail);
 
 export default router;
