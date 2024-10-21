@@ -346,3 +346,83 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
+### d. Resolver una orden
+- **Método**: PUT
+- **URL**: `localhost:8080/api/orders/6715b7f0b19aaa59fe8d1354`
+- **Descripción**: Marca una orden como resuelta.
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "order": {
+        "id": "6715b7f0b19aaa59fe8d1354",
+        "number": 1729476597052,
+        "products": [
+            {
+                "name": "procesador i7",
+                "price": 200000
+            },
+            {
+                "name": "ram 16gb",
+                "price": 50000
+            }
+        ],
+        "totalPrice": 250000,
+        "status": "resolved"
+    }
+}
+```
+### e. Enviar correo con detalles de la orden
+- **Método**: GET
+- **URL**: `localhost:8080/api/orders/mail/order/6715b7f0b19aaa59fe8d1354`
+- **Descripción**: Envía un correo electrónico con los detalles de la orden.
+#### Respuesta 1:
+```json
+{
+    "status": "success",
+    "message": "Email sent"
+}
+```
+#### Respuesta 2:
+```json
+Correo enviado:  {
+  accepted: [ 'cosoriogut@gmail.com' ],
+  rejected: [],
+  ehlo: [
+    'SIZE 35882577',
+    '8BITMIME',
+    'AUTH LOGIN PLAIN XOAUTH2 PLAIN-CLIENTTOKEN OAUTHBEARER XOAUTH',
+    'ENHANCEDSTATUSCODES',
+    'PIPELINING',
+    'CHUNKING',
+    'SMTPUTF8'
+  ],
+  envelopeTime: 693,
+  messageTime: 901,
+  messageSize: 1592,
+  response: '250 2.0.0 OK  1729477822 41be03b00d2f7-7eaeabdb784sm1882951a12.91 - gsmtp',
+  envelope: { from: 'cosoriogut@gmail.com', to: [ 'cosoriogut@gmail.com' ] },
+  messageId: '<2d412a42-3933-45e4-cc8b-33bd99201894@gmail.com>'
+}
+```
+#### Respuesta 3:
+```json
+de:	Cristian Osorio <cosoriogut@gmail.com>
+para:	cosoriogut@gmail.com
+fecha:	20 oct 2024, 23:30
+asunto:	Detalles de la Orden
+enviado por:	gmail.com
+Detalles de la Orden
+¡Gracias por tu pedido!
+
+Resumen de la Orden
+Número de Orden: 1729476597052
+
+Estado: resolved
+
+Total: $250000.00
+
+Productos
+procesador i7 - $200000.00 x undefined unidad(es)
+ram 16gb - $50000.00 x undefined unidad(es)
+```
