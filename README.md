@@ -250,3 +250,23 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
     }
 }
 ```
+### d. Agregar un producto a un negocio
+- **Método**: POST
+- **URL**: `localhost:8080/api/business/6715af4b5845dafea6506c85/product`
+- **CUERPO**: (JSON)
+- **Descripción**: Obtiene los detalles de un negocio específico.
+#### Enviar:
+```bash
+{
+    "name": "procesador i7",
+    "price": 200000,
+    "quantity": 10
+}
+```
+#### Respuesta:
+```json
+{
+    "status": "success",
+    "result": "Business updated"
+}
+```
