@@ -2,10 +2,10 @@
 
 <p align="center">
   <a href="#acerca">Acerca</a> &#xa0; | &#xa0; 
-  <a href="#tecnologias">Tecnologías</a> &#xa0; | &#xa0;
-  <a href="#rocket-technologies">Technologies</a> &#xa0; | &#xa0;
+  <a href="#tecnologias">Tecnologias</a> &#xa0; | &#xa0;
+  <a href="#rutas">Rutas</a> &#xa0; | &#xa0;
   <a href="#white_check_mark-requirements">Requirements</a> &#xa0; | &#xa0;
-  <a href="#checkered_flag-starting">Starting</a> &#xa0; | &#xa0;
+  <a href="#instalacion">Instalacion</a> &#xa0; | &#xa0;
   <a href="#test">Test</a> &#xa0; | &#xa0;
   <a href="https://github.com/codercriosogut/backend2-entregafinalosorio.git" target="_blank">GitHub</a>
 </p>
@@ -18,7 +18,7 @@
 Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de compra, incluyendo la creación de órdenes, la gestión de productos dentro de los negocios, y el envío de correos electrónicos con detalles de las órdenes utilizando Nodemailer.
 
 
-## Tecnologías ##
+## Tecnologias ##
 - **Node.js**: Plataforma para la ejecución de JavaScript del lado del servidor.
 - **Express.js**: Framework para la creación de aplicaciones web y API REST.
 - **MongoDB**: Base de datos NoSQL para la persistencia de la información.
@@ -26,6 +26,26 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 - **Nodemailer**: Librería para el envío de correos electrónicos.
 - **JWT (JSON Web Tokens)**: Para la autenticación y autorización.
 - **dotenv**: Manejo de variables de entorno.
+
+## Rutas ##
+
+### Usuarios
+- `GET /api/users`: Obtiene la lista de usuarios.
+- `GET /api/users/:uid`: Obtiene los detalles de un usuario por ID.
+- `POST /api/users`: Crea un nuevo usuario.
+
+### Negocios
+- `GET /api/business`: Obtiene la lista de negocios.
+- `GET /api/business/:bid`: Obtiene los detalles de un negocio por ID.
+- `POST /api/business`: Crea un nuevo negocio.
+- `POST /api/business/:bid/product`: Añade un producto a un negocio.
+
+### Órdenes
+- `GET /api/orders`: Obtiene la lista de órdenes.
+- `GET /api/orders/:oid`: Obtiene los detalles de una orden por ID.
+- `POST /api/orders`: Crea una nueva orden.
+- `POST /api/orders/:oid/resolve`: Marca una orden como resuelta.
+- `GET /mail/order/:oid`: Envía un correo electrónico con los detalles de la orden.
 
 
 ## .env ##
@@ -76,6 +96,29 @@ Made with :heart: by <a href="https://github.com/{{YOUR_GITHUB_USERNAME}}" targe
 &#xa0;
 
 <a href="#top">Back to top</a>
+
+
+
+
+## Instalacion ##
+
+1. Clona este repositorio:
+```bash
+# Clone this project
+$ git clone https://github.com/codercriosogut/backend2-entregafinalosorio
+
+# Access
+$ cd v1
+
+# Install dependencies
+$ yarn
+
+# Run the project
+$ yarn start
+
+# The server will initialize in the <http://localhost:3000>
+```
+
 
 
 ## Directorios ##
