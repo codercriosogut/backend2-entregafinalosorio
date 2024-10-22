@@ -6,7 +6,6 @@ import businessRouter from './routes/business.router.js';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-/* import { authMiddleware } from './middlewares.js'; */
 
 dotenv.config();
 
@@ -47,7 +46,3 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', usersRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/orders', ordersRouter);
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
