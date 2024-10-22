@@ -452,6 +452,11 @@ Productos
 procesador i7 - $200000.00 x undefined unidad(es)
 ram 16gb - $50000.00 x undefined unidad(es)
 ```
+<div align="center" id="top">
+    <h1 align="center">Resumen de la Orden</h1>
+    <h2 align="center">Número de Orden: 1729476597052</h2>
+    <img src="./test/image04.png" alt="businesses" />
+</div>
 
 ##
 # 4.- cloud.mongodb
