@@ -5,11 +5,7 @@ const orderSchema = new mongoose.Schema({
     business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' },
     user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [{
-<<<<<<< HEAD
-        id: mongoose.SchemaTypes.ObjectId,
-=======
         id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
->>>>>>> v13-ok
         name: String,
         price: Number,
         quantity: Number
