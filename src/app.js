@@ -36,7 +36,7 @@ mongoose.connect(process.env.MONGODB_URI)
     })
     .catch(error => {
         console.error('Error al conectar a MongoDB:', error);
-        process.exit(1); // Detener el proceso si falla la conexión
+        process.exit(1);
     });
 
 app.use(cors());

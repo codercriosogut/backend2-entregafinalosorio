@@ -7,9 +7,8 @@ export const authMiddleware = (req, res, next) => {
         return res.status(403).send({ status: 'error', error: 'No token provided' });
     }
 
-    // Verifica si el token contiene el prefijo "Bearer "
     if (token.startsWith('Bearer ')) {
-        token = token.slice(7, token.length); // Elimina "Bearer " del token
+        token = token.slice(7, token.length);
     }
 
     jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {

@@ -1,4 +1,4 @@
-<h1 align="center">Sistema de Gestión de Negocios, Órdenes y Usuarios</h1>
+<h1 align="center" id="title">Sistema de Gestión de Negocios, Órdenes y Usuarios</h1>
 <div align="center" id="top"> 
   <img src="./test/logo.png" alt="logo" />
 </div>
@@ -19,6 +19,8 @@
 
 Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de compra, incluyendo la creación de órdenes, la gestión de productos dentro de los negocios, y el envío de correos electrónicos con detalles de las órdenes utilizando Nodemailer. La estructura del proyecto sigue una arquitectura organizada en capas (controladores, servicios DAO y DTO) para facilitar el mantenimiento y la escalabilidad.
 
+<a href="#title">Volver al inicio</a>
+
 
 ## Tecnologias ##
 - **Node.js**: Plataforma para la ejecución de JavaScript del lado del servidor.
@@ -28,6 +30,8 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 - **Nodemailer**: Librería para el envío de correos electrónicos.
 - **JWT (JSON Web Tokens)**: Para la autenticación y autorización.
 - **dotenv**: Manejo de variables de entorno.
+
+<a href="#title">Volver al inicio</a>
 
 
 ## .env ##
@@ -39,6 +43,7 @@ Este proyecto es una API que permite gestionar usuarios, negocios y órdenes de 
 
 **⚠️ Nota: información confidencial:** El archivo `.env` ha sido proporcionado únicamente para facilitar la evaluación de este proyecto por parte del profesor.
 
+<a href="#title">Volver al inicio</a>
 
 ## Instalacion ##
 
@@ -66,6 +71,9 @@ $ npm start
 # Utilizar Postman
 ```
 
+<a href="#title">Volver al inicio</a>
+
+
 ## Rutas ## 
 ### POSTMAN
 
@@ -87,6 +95,7 @@ $ npm start
 - `POST /api/orders/:oid/resolve`: Marca una orden como resuelta.
 - `GET /mail/order/:oid`: Envía un correo electrónico con los detalles de la orden.
 
+<a href="#title">Volver al inicio</a>
 
 ## Directorios ##
 ```markdown
@@ -469,3 +478,7 @@ ram 16gb - $50000.00 x undefined unidad(es)
     <h2 align="center">clase13_EntregaFinal.users</h2>
     <img src="./test/image03.png" alt="businesses" />
 </div>
+
+##
+<a href="#title">Volver al inicio</a>
+##

@@ -14,6 +14,5 @@ const orderSchema = new mongoose.Schema({
     status: String
 });
 
-// Aquí especificamos la colección como 'orders'
-const Order = mongoose.model('Order', orderSchema, 'orders'); // 'orders' es el nombre de la colección
+const Order = mongoose.model('Order', orderSchema, 'orders');
 export default Order;

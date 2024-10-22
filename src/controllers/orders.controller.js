@@ -4,7 +4,7 @@ import User from '../dao_dto/classes/user.dao.js';
 import { transport } from '../app.js';
 import { OrderDTO } from '../dao_dto/classes/order.dto.js';
 
-const orderRepository = new OrderRepository(); // Instancia del repositorio
+const orderRepository = new OrderRepository();
 const usersService = new User();
 const businessService = new Business();
 
@@ -68,7 +68,7 @@ export const createOrder = async (req, res) => {
                 id: product.id,
                 name: product.name,
                 price: product.price,
-                quantity: product.quantity // Asegúrate de incluir la cantidad si la necesitas
+                quantity: product.quantity
             })),
             totalPrice,
             status: "pending"
@@ -117,7 +117,7 @@ export const sendOrderEmail = async (req, res) => {
     try {
         const result = await transport.sendMail({
             from: "Cristian Osorio <cosoriogut@gmail.com>",
-            to: "cosoriogut@gmail.com", // Cambia esto al correo del usuario si corresponde
+            to: "cosoriogut@gmail.com",
             subject: "Detalles de la Orden",
             html: `
                 <div style="font-family: Arial, sans-serif; color: #333;">

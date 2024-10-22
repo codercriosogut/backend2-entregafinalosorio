@@ -1,6 +1,6 @@
 import OrderDAO from '../dao_dto/classes/order.dao.js';
 
-const orderDAO = new OrderDAO(); // Instancia del DAO
+const orderDAO = new OrderDAO();
 
 export default class OrderRepository {
     async getOrders() {
