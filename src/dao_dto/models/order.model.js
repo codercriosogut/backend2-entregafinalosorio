@@ -15,9 +15,7 @@ const schema = new mongoose.Schema({
     products: [{
         id: mongoose.SchemaTypes.ObjectId,
         name: String,
-        price: Number,
-        //add
-        quantity: { type: Number, required: true } 
+        price: Number
     }],
     totalPrice: Number,
     status: { type: String }
