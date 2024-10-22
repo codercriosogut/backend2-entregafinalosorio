@@ -4,10 +4,16 @@ import { UserDTO } from '../dao_dto/classes/user.dto.js';
 const userService = new User();
 
 export const getUsers = async (req, res) => {
-    let users = await userService.getUsers();
-    const usersDTO = users.map(user => new UserDTO(user));
-    res.send({ status: "success", users: usersDTO });
+    try {
+        let users = await userService.getUsers();
+        const usersDTO = users.map(user => new UserDTO(user));
+        res.send({ status: "success", users: usersDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "error", message: "Error al obtener los usuarios" });
+    }
 };
+
 
 export const getUserById = async (req, res) => {
     const { uid } = req.params;
