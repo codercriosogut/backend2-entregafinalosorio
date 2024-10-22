@@ -13,10 +13,11 @@ const schema = new mongoose.Schema({
         ref: "Users"
     },
     products: [{
-        //add
         id: mongoose.SchemaTypes.ObjectId,
         name: String,
-        price: Number
+        price: Number,
+        //add
+        quantity: { type: Number, required: true } 
     }],
     totalPrice: Number,
     status: { type: String }
