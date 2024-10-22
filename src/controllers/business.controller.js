@@ -30,8 +30,16 @@ export const createBusiness = async (req, res) => {
 export const addProduct = async (req, res) => {
     let product = req.body;
     product.id = new mongoose.Types.ObjectId();
+
     let business = await businessService.getBusinessById(req.params.bid);
+    
+    const productExists = business.products.some(p => p.id.toString() === product.id.toString());
+    if (productExists) {
+        return res.status(400).send({ status: "error", message: "Product already exists in business" });
+    }
+
     business.products.push(product);
+    
     await businessService.updateBusiness(business._id, business);
-    res.send({ status: "success", result: "Business updated" });
+    res.send({ status: "success", result: "Product added successfully to business" });
 };

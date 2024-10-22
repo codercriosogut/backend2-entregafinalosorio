@@ -1,27 +1,22 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const collection = "Orders"
-
-const schema = new mongoose.Schema({
+const orderSchema = new mongoose.Schema({
     number: Number,
-    business: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "Business"
-    },
-    user: {
-        type: mongoose.SchemaTypes.ObjectId,
-        ref: "Users"
-    },
+    business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     products: [{
+<<<<<<< HEAD
         id: mongoose.SchemaTypes.ObjectId,
+=======
+        id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+>>>>>>> v13-ok
         name: String,
-        price: Number
+        price: Number,
+        quantity: Number
     }],
     totalPrice: Number,
-    status: { type: String }
-})
+    status: String
+});
 
-
-const orderModel = mongoose.model(collection, schema)
-
-export default orderModel
+const Order = mongoose.model('Order', orderSchema, 'orders');
+export default Order;

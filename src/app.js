@@ -6,12 +6,11 @@ import businessRouter from './routes/business.router.js';
 import mongoose from 'mongoose';
 import nodemailer from 'nodemailer';
 import dotenv from 'dotenv';
-import { authMiddleware } from './middlewares.js';
 
 dotenv.config();
 
 const app = express();
-const PORT = 8080;
+const PORT = process.env.PORT
 
 if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.error('Error: Configuración de correo no definida en las variables de entorno');
@@ -29,8 +28,16 @@ const transport = nodemailer.createTransport({
 export { transport };
 
 mongoose.connect(process.env.MONGODB_URI)
-    .then(() => console.log('Conexión a MongoDB establecida'))
-    .catch(error => console.error('Error al conectar a MongoDB:', error));
+    .then(() => {
+        console.log('Conexión a MongoDB establecida');
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch(error => {
+        console.error('Error al conectar a MongoDB:', error);
+        process.exit(1);
+    });
 
 app.use(cors());
 app.use(express.json());
@@ -39,7 +46,3 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/users', usersRouter);
 app.use('/api/business', businessRouter);
 app.use('/api/orders', ordersRouter);
-
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});

@@ -1,88 +1,114 @@
-import Order from '../dao_dto/classes/order.dao.js';
+import OrderRepository from '../repositories/order.repository.js';
 import Business from '../dao_dto/classes/business.dao.js';
 import User from '../dao_dto/classes/user.dao.js';
 import { transport } from '../app.js';
 import { OrderDTO } from '../dao_dto/classes/order.dto.js';
 
+const orderRepository = new OrderRepository();
 const usersService = new User();
-const ordersService = new Order();
 const businessService = new Business();
 
 export const getOrders = async (req, res) => {
-    const orders = await ordersService.getOrders();
-    const ordersDTO = orders.map(order => new OrderDTO(order));
-    res.send({ status: "success", orders: ordersDTO });
+    try {
+        const orders = await orderRepository.getOrders();
+        const ordersDTO = orders.map(order => new OrderDTO(order));
+        res.json({ status: 'success', orders: ordersDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener las órdenes.' });
+    }
 };
 
 export const getOrderById = async (req, res) => {
     const { oid } = req.params;
-    const order = await ordersService.getOrderById(oid);
+    try {
+        const order = await orderRepository.getOrderById(oid);
 
-    if (!order) {
-        return res.status(404).send({ status: "error", error: "Order not found" });
+        if (!order) {
+            return res.status(404).send({ status: "error", error: "Order not found" });
+        }
+
+        const orderDTO = new OrderDTO(order);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al obtener la orden.' });
     }
-
-    const orderDTO = new OrderDTO(order);
-    res.send({ status: "success", order: orderDTO });
 };
 
 export const createOrder = async (req, res) => {
     const { userId, businessId, productIds } = req.body;
 
-    const resultBusiness = await businessService.getBusinessById(businessId);
-    const resultUser = await usersService.getUserById(userId);
-
-    if (!resultBusiness || !resultUser) {
-        return res.status(400).send({ status: "error", error: "User or Business not found" });
+    if (!userId || !businessId || !productIds) {
+        return res.status(400).send({ status: "error", error: "Missing required fields" });
     }
 
-    const actualOrders = resultBusiness.products.filter(product => productIds.includes(product.id.toString()));
+    try {
+        const resultBusiness = await businessService.getBusinessById(businessId);
+        const resultUser = await usersService.getUserById(userId);
 
-    if (!actualOrders.length) {
-        return res.status(400).send({ status: "error", error: "No valid products found" });
+        if (!resultBusiness || !resultUser) {
+            return res.status(400).send({ status: "error", error: "User or Business not found" });
+        }
+
+        const actualOrders = resultBusiness.products.filter(product => productIds.includes(product.id.toString()));
+
+        if (!actualOrders.length) {
+            return res.status(400).send({ status: "error", error: "No valid products found" });
+        }
+
+        let totalPrice = actualOrders.reduce((acc, product) => acc + product.price, 0);
+        let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
+
+        let order = {
+            number: orderNumber,
+            business: businessId,
+            user: userId,
+            products: actualOrders.map(product => ({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: product.quantity
+            })),
+            totalPrice,
+            status: "pending"
+        };
+
+        let orderResult = await orderRepository.createOrder(order);
+        resultUser.orders.push(orderResult._id);
+        await usersService.updateUser(userId, resultUser);
+
+        const orderDTO = new OrderDTO(orderResult);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al crear la orden.' });
     }
-
-    let totalPrice = actualOrders.reduce((acc, product) => acc + product.price, 0);
-    let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
-
-    let order = {
-        number: orderNumber,
-        business: businessId,
-        user: userId,
-        products: actualOrders.map(product => ({
-            id: product.id,
-            name: product.name,
-            price: product.price
-        })),
-        totalPrice,
-        status: "pending"
-    };
-
-    let orderResult = await ordersService.createOrder(order);
-    resultUser.orders.push(orderResult._id);
-    await usersService.updateUser(userId, resultUser);
-
-    const orderDTO = new OrderDTO(orderResult);
-    res.send({ status: "success", orderResult: orderDTO });
 };
 
 export const resolveOrder = async (req, res) => {
     const { oid } = req.params;
-    const order = await ordersService.getOrderById(oid);
+    try {
+        const order = await orderRepository.getOrderById(oid);
 
-    if (!order) {
-        return res.status(404).send({ status: "error", error: "Order not found" });
+        if (!order) {
+            return res.status(404).send({ status: "error", error: "Order not found" });
+        }
+
+        order.status = "resolved";
+        await orderRepository.updateOrder(order._id, order);
+        const orderDTO = new OrderDTO(order);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al resolver la orden.' });
     }
-
-    order.status = "resolved";
-    await ordersService.updateOrder(order._id, order);
-    const orderDTO = new OrderDTO(order);
-    res.send({ status: "success", order: orderDTO });
 };
+
 
 export const sendOrderEmail = async (req, res) => {
     const { oid } = req.params;
-    const order = await ordersService.getOrderById(oid);
+    const order = await orderRepository.getOrderById(oid);
 
     if (!order) {
         return res.status(404).send({ status: "error", error: "Order not found" });
