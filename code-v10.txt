@@ -642,7 +642,7 @@ export class UserDTO {
 
 
 
-src/dao/models/business.model.js
+src/dao_dto/models/business.model.js
 import mongoose from "mongoose";
 
 const collection = "Business";
@@ -676,7 +676,7 @@ export default businessModel;
 
 
 
-src/dao/models/order.model.js
+src/dao_dto/models/order.model.js
 import mongoose from "mongoose";
 
 const collection = "Orders"
@@ -717,7 +717,7 @@ export default orderModel
 
 
 
-src/dao/models/user.model.js
+src/dao_dto/models/user.model.js
 import mongoose from "mongoose";
 
 const collection = "Users"
@@ -834,6 +834,7 @@ export default router
 EMAIL_USER=cosoriogut@gmail.com
 EMAIL_PASS=ccbq crle ovlp xtra
 JWT_SECRET=mySuperSecretKey123!@#
+MONGODB_URI=mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0
 
 
 
@@ -888,7 +889,7 @@ test Postman
 ┃ ┣ 📜business.controller.js
 ┃ ┣ 📜orders.controller.js
 ┃ ┗ 📜users.controller.js
-┣ 📂dao
+┣ 📂dao_dto
 ┃ ┣ 📂classes
 ┃ ┃ ┣ 📜business.dao.js
 ┃ ┃ ┣ 📜business.dto.js
