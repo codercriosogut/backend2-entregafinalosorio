@@ -13,7 +13,6 @@ const schema = new mongoose.Schema({
         ref: "Users"
     },
     products: [{
-        //add
         id: mongoose.SchemaTypes.ObjectId,
         name: String,
         price: Number
