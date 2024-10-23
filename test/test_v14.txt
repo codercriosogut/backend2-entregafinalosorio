@@ -162,3 +162,62 @@ localhost:8080/api/business
 }
 
 
+POST
+http://localhost:8080/api/business/671855ca43964713fadb7841/product
+-
+{
+    "name": "uno",
+    "price": 10,
+    "quantity": 10
+}
+-
+{
+    "status": "success",
+    "result": "Product added successfully to business"
+}
+-
+_id
+671855ca43964713fadb7841
+name
+"mi-empresa-4"
+
+products
+Array (1)
+
+0
+Object
+id
+6718574a43964713fadb784d
+name
+"uno"
+price
+10
+_id
+6718574a43964713fadb784f
+__v
+
+
+
+
+POST
+localhost:8080/api/products/create
+{
+    "name": "Producto de Prueba",
+    "price": 50,
+    "quantity": 10
+}
+-
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<title>Error</title>
+</head>
+
+<body>
+	<pre>Cannot POST /api/products/create</pre>
+</body>
+
+</html>
+
