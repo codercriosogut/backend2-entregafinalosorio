@@ -1,0 +1,1202 @@
+Adjunto el codigo completo:
+
+directorio:
+📦src
+ ┣ 📂controllers
+ ┃ ┣ 📜business.controller.js
+ ┃ ┣ 📜cart.controller.js
+ ┃ ┣ 📜orders.controller.js
+ ┃ ┗ 📜users.controller.js
+ ┣ 📂dao_dto
+ ┃ ┣ 📂classes
+ ┃ ┃ ┣ 📜business.dao.js
+ ┃ ┃ ┣ 📜business.dto.js
+ ┃ ┃ ┣ 📜order.dao.js
+ ┃ ┃ ┣ 📜order.dto.js
+ ┃ ┃ ┣ 📜ticket.dao.js
+ ┃ ┃ ┣ 📜ticket.model.js
+ ┃ ┃ ┣ 📜user.dao.js
+ ┃ ┃ ┗ 📜user.dto.js
+ ┃ ┗ 📂models
+ ┃ ┃ ┣ 📜business.model.js
+ ┃ ┃ ┣ 📜order.model.js
+ ┃ ┃ ┣ 📜product.model.js
+ ┃ ┃ ┗ 📜user.model.js
+ ┣ 📂middlewares
+ ┃ ┣ 📜authorization.js
+ ┃ ┗ 📜middlewares.js
+ ┣ 📂repositories
+ ┃ ┗ 📜order.repository.js
+ ┣ 📂routes
+ ┃ ┣ 📜business.router.js
+ ┃ ┣ 📜cart.router.js
+ ┃ ┣ 📜orders.router.js
+ ┃ ┣ 📜passport.router.js
+ ┃ ┣ 📜products.router.js
+ ┃ ┗ 📜users.router.js
+ ┗ 📜app.js
+
+
+src/app.js
+import express from 'express';
+import cors from 'cors';
+import usersRouter from './routes/users.router.js';
+import ordersRouter from './routes/orders.router.js';
+import businessRouter from './routes/business.router.js';
+import mongoose from 'mongoose';
+import nodemailer from 'nodemailer';
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT
+
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.error('Error: Configuración de correo no definida en las variables de entorno');
+    process.exit(1);
+}
+
+const transport = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+    }
+});
+
+export { transport };
+
+mongoose.connect(process.env.MONGODB_URI)
+    .then(() => {
+        console.log('Conexión a MongoDB establecida');
+        app.listen(PORT, () => {
+            console.log(`Server is running on port ${PORT}`);
+        });
+    })
+    .catch(error => {
+        console.error('Error al conectar a MongoDB:', error);
+        process.exit(1);
+    });
+
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use('/api/users', usersRouter);
+app.use('/api/business', businessRouter);
+app.use('/api/orders', ordersRouter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/controllers/business.controller.js
+import Business from '../dao_dto/classes/business.dao.js';
+import mongoose from 'mongoose';
+import { BusinessDTO } from '../dao_dto/classes/business.dto.js';
+
+const businessService = new Business();
+
+export const getBusiness = async (req, res) => {
+    let result = await businessService.getBusiness();
+    if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
+    const businessDTO = result.map(b => new BusinessDTO(b));
+    res.send({ status: "success", result: businessDTO });
+};
+
+export const getBusinessById = async (req, res) => {
+    const { bid } = req.params;
+    let result = await businessService.getBusinessById(bid);
+    if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
+    const businessDTO = new BusinessDTO(result);
+    res.send({ status: "success", result: businessDTO });
+};
+
+export const createBusiness = async (req, res) => {
+    const business = req.body;
+    let result = await businessService.saveBusiness(business);
+    if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
+    const businessDTO = new BusinessDTO(result);
+    res.send({ status: "success", result: businessDTO });
+};
+
+export const addProduct = async (req, res) => {
+    let product = req.body;
+    product.id = new mongoose.Types.ObjectId();
+
+    let business = await businessService.getBusinessById(req.params.bid);
+    
+    const productExists = business.products.some(p => p.id.toString() === product.id.toString());
+    if (productExists) {
+        return res.status(400).send({ status: "error", message: "Product already exists in business" });
+    }
+
+    business.products.push(product);
+    
+    await businessService.updateBusiness(business._id, business);
+    res.send({ status: "success", result: "Product added successfully to business" });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/controllers/cart.controller.js
+const User = require('../dao_dto/models/user.model.js'); // Asegúrate de que tienes el modelo de usuario o carrito adecuado
+const Product = require('../dao_dto/models/product.model.js'); // Asegúrate de que tienes el modelo de producto adecuado
+
+// Controlador para agregar productos al carrito
+const addProductToCart = async (req, res) => {
+    try {
+        const userId = req.user._id; // El usuario autenticado
+        const { productId, quantity } = req.body;
+
+        // Verifica que el producto exista
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+
+        // Encuentra el carrito del usuario (puedes tenerlo como parte del modelo de usuario)
+        let user = await User.findById(userId).populate('cart.products.product');
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        // Verifica si el producto ya está en el carrito
+        const cartItemIndex = user.cart.products.findIndex(item => item.product._id.equals(productId));
+
+        if (cartItemIndex >= 0) {
+            // Si el producto ya está en el carrito, actualiza la cantidad
+            user.cart.products[cartItemIndex].quantity += quantity;
+        } else {
+            // Si no está en el carrito, añádelo
+            user.cart.products.push({ product: productId, quantity });
+        }
+
+        // Guarda los cambios
+        await user.save();
+
+        return res.status(200).json({ message: 'Product added to cart', cart: user.cart });
+    } catch (error) {
+        console.error('Error adding product to cart:', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
+};
+
+module.exports = {
+    addProductToCart
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/controllers/orders.controller.js
+import OrderRepository from '../repositories/order.repository.js';
+import Business from '../dao_dto/classes/business.dao.js';
+import User from '../dao_dto/classes/user.dao.js';
+import { transport } from '../app.js';
+import { OrderDTO } from '../dao_dto/classes/order.dto.js';
+
+const orderRepository = new OrderRepository();
+const usersService = new User();
+const businessService = new Business();
+
+export const getOrders = async (req, res) => {
+    try {
+        const orders = await orderRepository.getOrders();
+        const ordersDTO = orders.map(order => new OrderDTO(order));
+        res.json({ status: 'success', orders: ordersDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Error al obtener las órdenes.' });
+    }
+};
+
+export const getOrderById = async (req, res) => {
+    const { oid } = req.params;
+    try {
+        const order = await orderRepository.getOrderById(oid);
+
+        if (!order) {
+            return res.status(404).send({ status: "error", error: "Order not found" });
+        }
+
+        const orderDTO = new OrderDTO(order);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al obtener la orden.' });
+    }
+};
+
+export const createOrder = async (req, res) => {
+    const { userId, businessId, productIds } = req.body;
+
+    if (!userId || !businessId || !productIds) {
+        return res.status(400).send({ status: "error", error: "Missing required fields" });
+    }
+
+    try {
+        const resultBusiness = await businessService.getBusinessById(businessId);
+        const resultUser = await usersService.getUserById(userId);
+
+        if (!resultBusiness || !resultUser) {
+            return res.status(400).send({ status: "error", error: "User or Business not found" });
+        }
+
+        const actualOrders = resultBusiness.products.filter(product => productIds.includes(product.id.toString()));
+
+        if (!actualOrders.length) {
+            return res.status(400).send({ status: "error", error: "No valid products found" });
+        }
+
+        let totalPrice = actualOrders.reduce((acc, product) => acc + product.price, 0);
+        let orderNumber = Date.now() + Math.floor(Math.random() * 10000 + 1);
+
+        let order = {
+            number: orderNumber,
+            business: businessId,
+            user: userId,
+            products: actualOrders.map(product => ({
+                id: product.id,
+                name: product.name,
+                price: product.price,
+                quantity: product.quantity
+            })),
+            totalPrice,
+            status: "pending"
+        };
+
+        let orderResult = await orderRepository.createOrder(order);
+        resultUser.orders.push(orderResult._id);
+        await usersService.updateUser(userId, resultUser);
+
+        const orderDTO = new OrderDTO(orderResult);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al crear la orden.' });
+    }
+};
+
+export const resolveOrder = async (req, res) => {
+    const { oid } = req.params;
+    try {
+        const order = await orderRepository.getOrderById(oid);
+
+        if (!order) {
+            return res.status(404).send({ status: "error", error: "Order not found" });
+        }
+
+        order.status = "resolved";
+        await orderRepository.updateOrder(order._id, order);
+        const orderDTO = new OrderDTO(order);
+        res.send({ status: "success", order: orderDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: 'error', message: 'Error al resolver la orden.' });
+    }
+};
+
+
+export const sendOrderEmail = async (req, res) => {
+    const { oid } = req.params;
+    const order = await orderRepository.getOrderById(oid);
+
+    if (!order) {
+        return res.status(404).send({ status: "error", error: "Order not found" });
+    }
+
+    try {
+        const result = await transport.sendMail({
+            from: "Cristian Osorio <cosoriogut@gmail.com>",
+            to: "cosoriogut@gmail.com",
+            subject: "Detalles de la Orden",
+            html: `
+                <div style="font-family: Arial, sans-serif; color: #333;">
+                    <h1 style="background-color: #f8f9fa; padding: 10px; text-align: center;">Detalles de la Orden</h1>
+                    <p>¡Gracias por tu pedido!</p>
+                    <h2>Resumen de la Orden</h2>
+                    <p><strong>Número de Orden:</strong> ${order.number}</p>
+                    <p><strong>Estado:</strong> ${order.status}</p>
+                    <p><strong>Total:</strong> $${order.totalPrice.toFixed(2)}</p>
+                    <h3>Productos</h3>
+                    <ul>
+                        ${order.products.map(product => `
+                            <li>
+                                <strong>${product.name}</strong> - 
+                                $${product.price.toFixed(2)} x ${product.quantity} unidad(es)
+                            </li>
+                        `).join('')}
+                    </ul>
+                    <hr>
+                    <p style="text-align: center;">¡Gracias por comprar con nosotros!</p>
+                </div>
+            `,
+            attachments: []
+        });
+        console.log('Correo enviado: ', result);
+        res.send({ status: 'success', message: 'Email sent' });
+    } catch (error) {
+        console.error('Error al enviar el correo: ', error);
+        res.status(500).send({ status: 'error', message: 'Failed to send email' });
+    }
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/controllers/users.controller.js
+import User from '../dao_dto/classes/user.dao.js';
+import { UserDTO } from '../dao_dto/classes/user.dto.js';
+
+const userService = new User();
+
+export const getUsers = async (req, res) => {
+    try {
+        let users = await userService.getUsers();
+        const usersDTO = users.map(user => new UserDTO(user));
+        res.send({ status: "success", users: usersDTO });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ status: "error", message: "Error al obtener los usuarios" });
+    }
+};
+
+
+export const getUserById = async (req, res) => {
+    const { uid } = req.params;
+    let user = await userService.getUserById(uid);
+    if (!user) return res.status(404).send({ status: "error", error: "User not found" });
+    const userDTO = new UserDTO(user);
+    res.send({ status: "success", user: userDTO });
+};
+
+export const createUser = async (req, res) => {
+    const user = req.body;
+    let result = await userService.saveUser(user);
+    if (!result) return res.status(500).send({ status: "error", error: "Something went wrong" });
+    const userDTO = new UserDTO(result);
+    res.send({ status: "success", user: userDTO });
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/business.dao.js
+import Business from '../models/business.model.js';
+
+export default class BusinessDAO {
+    async getBusiness() {
+        return await Business.find({});
+    }
+
+    async getBusinessById(id) {
+        try {
+            return await Business.findById(id);
+        } catch (error) {
+            console.error(`Error al obtener el negocio por ID: ${error}`);
+            throw new Error('Error fetching business');
+        }
+    }
+    
+
+    async saveBusiness(business) {
+        const newBusiness = new Business(business);
+        return await newBusiness.save();
+    }
+
+    async updateBusiness(id, business) {
+        return await Business.findByIdAndUpdate(id, business, { new: true });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/business.dto.js
+export class BusinessDTO {
+    constructor(business) {
+        this.id = business._id;
+        this.name = business.name;
+        this.products = business.products;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/order.dao.js
+import Order from '../models/order.model.js';
+
+export default class OrderDAO {
+    async getOrders() {
+        return await Order.find({});
+    }
+
+    async getOrderById(id) {
+        return await Order.findById(id);
+    }
+
+    async createOrder(order) {
+        const newOrder = new Order(order);
+        return await newOrder.save();
+    }
+
+    async updateOrder(id, order) {
+        return await Order.findByIdAndUpdate(id, order, { new: true });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/order.dto.js
+export class ProductDTO {
+    constructor(product) {
+        this.id = product.id;
+        this.name = product.name;
+        this.price = product.price;
+        this.quantity = product.quantity;
+    }
+}
+
+export class OrderDTO {
+    constructor(order) {
+        this.number = order.number;
+        this.business = order.business;
+        this.user = order.user;
+        this.products = order.products.map(product => new ProductDTO(product));
+        this.totalPrice = order.totalPrice;
+        this.status = order.status;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/ticket.dao.js
+import Ticket from '../models/ticket.model.js';
+
+export default class TicketDAO {
+    async createTicket(ticket) {
+        const newTicket = new Ticket(ticket);
+        return await newTicket.save();
+    }
+
+    async getTicketsByUserId(userId) {
+        return await Ticket.find({ userId });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/ticket.model.js
+import mongoose from 'mongoose';
+
+const ticketSchema = new mongoose.Schema({
+    orderId: { type: mongoose.Schema.Types.ObjectId, ref: 'Order' },
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    status: { type: String, default: 'open' },
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now }
+});
+
+export default mongoose.model('Ticket', ticketSchema);
+
+
+
+
+
+
+src/dao_dto/classes/user.dao.js
+import User from '../models/user.model.js';
+
+export default class UserDAO {
+    async getUsers() {
+        return await User.find({});
+    }
+
+    async getUserById(id) {
+        return await User.findById(id);
+    }
+
+    async saveUser(user) {
+        const newUser = new User(user);
+        return await newUser.save();
+    }
+
+    async updateUser(id, user) {
+        return await User.findByIdAndUpdate(id, user, { new: true });
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/classes/user.dto.js
+export class UserDTO {
+    constructor(user) {
+        this.id = user._id;
+        this.name = user.name;
+        this.email = user.email;
+        this.orders = user.orders;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/models/business.model.js
+import mongoose from "mongoose";
+
+const collection = "Business";
+
+const schema = new mongoose.Schema({
+    name: String,
+    products: [{
+        id: mongoose.SchemaTypes.ObjectId,
+        name: String,
+        price: Number
+    }]
+});
+
+const businessModel = mongoose.model(collection, schema);
+
+export default businessModel;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/models/order.model.js
+import mongoose from 'mongoose';
+
+const orderSchema = new mongoose.Schema({
+    number: Number,
+    business: { type: mongoose.Schema.Types.ObjectId, ref: 'Business' },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    products: [{
+        id: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        name: String,
+        price: Number,
+        quantity: Number
+    }],
+    totalPrice: Number,
+    status: String
+});
+
+const Order = mongoose.model('Order', orderSchema, 'orders');
+export default Order;
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/models/product.model.js
+const mongoose = require('mongoose');
+
+// Esquema de producto
+const productSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    price: {
+        type: Number,
+        required: true,
+        min: 0
+    },
+    quantity: {
+        type: Number,
+        required: true,
+        min: 0
+    }
+});
+
+// Exportar el modelo de producto
+module.exports = mongoose.model('Product', productSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/dao_dto/models/user.model.js
+import mongoose from 'mongoose';
+
+const cartSchema = new mongoose.Schema({
+    products: [{
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, required: true, default: 1 }
+    }]
+});
+
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    role: String, // admin o user
+    cart: cartSchema
+});
+
+// Cambia a export default
+export default mongoose.model('User', userSchema);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/middlewares/authorization.js
+const isAdmin = (req, res, next) => {
+    if (req.user && req.user.role === 'admin') {
+        next(); // El usuario es administrador, continúa
+    } else {
+        return res.status(403).json({ message: 'Access forbidden: Admins only.' });
+    }
+};
+
+const isUser = (req, res, next) => {
+    if (req.user && req.user.role === 'user') {
+        next(); // El usuario es un usuario común, continúa
+    } else {
+        return res.status(403).json({ message: 'Access forbidden: Users only.' });
+    }
+};
+
+module.exports = { isAdmin, isUser };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/middlewares/middlewares.js
+import jwt from 'jsonwebtoken';
+
+export const authMiddleware = (req, res, next) => {
+    let token = req.headers['authorization'];
+
+    if (!token) {
+        return res.status(403).send({ status: 'error', error: 'No token provided' });
+    }
+
+    if (token.startsWith('Bearer ')) {
+        token = token.slice(7, token.length);
+    }
+
+    jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            const message = err.name === 'TokenExpiredError' ? 'Token has expired' : 'Invalid token';
+            return res.status(403).send({ status: 'error', error: message });
+        }
+        req.user = decoded;
+        next();
+    });
+
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/repositories/order.repository.js
+import OrderDAO from '../dao_dto/classes/order.dao.js';
+
+const orderDAO = new OrderDAO();
+
+export default class OrderRepository {
+    async getOrders() {
+        return await orderDAO.getOrders();
+    }
+
+    async getOrderById(id) {
+        return await orderDAO.getOrderById(id);
+    }
+
+    async createOrder(order) {
+        return await orderDAO.createOrder(order);
+    }
+
+    async updateOrder(id, order) {
+        return await orderDAO.updateOrder(id, order);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/routes/business.router.js
+import { Router } from "express";
+import { getBusiness, getBusinessById, createBusiness, addProduct } from "../controllers/business.controller.js";
+
+const router = Router()
+
+router.get('/', getBusiness)
+router.post('/', createBusiness)
+
+router.get('/:bid', getBusinessById)
+router.post('/:bid/product', addProduct)
+
+export default router
+
+
+
+
+
+
+
+
+
+src/routes/cart.router.js
+const express = require('express');
+const router = express.Router();
+const { isUser } = require('../middlewares/authorization');
+const cartController = require('../controllers/cart.controller');
+
+// Ruta para agregar productos al carrito, solo accesible por usuarios
+router.post('/add', isUser, cartController.addProductToCart);
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/routes/orders.router.js
+import { Router } from 'express';
+import { getOrders, getOrderById, createOrder, resolveOrder, sendOrderEmail } from '../controllers/orders.controller.js';
+
+const router = Router();
+
+router.get('/', getOrders);
+router.get('/:oid', getOrderById);
+router.post('/', createOrder);
+router.put('/:oid', resolveOrder);
+router.get('/mail/order/:oid', sendOrderEmail);
+
+export default router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/routes/passport.router.js
+const passport = require('passport');
+const productsRouter = require('../routes/products.router');
+const cartRouter = require('../routes/cart.router');
+
+app.use('/api/products', passport.authenticate('jwt', { session: false }), productsRouter);
+app.use('/api/cart', passport.authenticate('jwt', { session: false }), cartRouter);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/routes/products.router.js
+const express = require('express');
+const router = express.Router();
+const { isAdmin } = require('../middlewares/authorization');
+const productController = require('../controllers/product.controller');
+
+// Rutas para crear, actualizar y eliminar productos, solo accesibles por administradores
+router.post('/create', isAdmin, productController.createProduct);
+router.put('/:id', isAdmin, productController.updateProduct);
+router.delete('/:id', isAdmin, productController.deleteProduct);
+
+module.exports = router;
+
+
+
+
+
+
+
+
+
+
+
+
+
+src/routes/users.router.js
+import { Router } from "express";
+import { getUsers, getUserById, createUser } from '../controllers/users.controller.js'
+
+const router = Router()
+
+router.get('/', getUsers)
+router.get('/:uid', getUserById)
+router.post('/', createUser)
+
+export default router
+
+
+
+
+
+.env
+EMAIL_USER=cosoriogut@gmail.com
+EMAIL_PASS=ccbq crle ovlp xtra
+JWT_SECRET=mySuperSecretKey123!@#
+MONGODB_URI=mongodb+srv://cri2024:cri2024@cluster0.mswsapd.mongodb.net/clase13_EntregaFinal?retryWrites=true&w=majority&appName=Cluster0
+PORT=8080
+
+
+
+
+
+
+.gitignore
+node_modules
+.env
+
+
+
+
+
+
+package.json
+{
+  "name": "arquitectura-completo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "node --watch src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.3.2",
+    "nodemailer": "^6.9.15"
+  }
+}
+
+
+
+
+
+

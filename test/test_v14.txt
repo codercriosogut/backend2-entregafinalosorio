@@ -1,0 +1,164 @@
+POST
+localhost:8080/api/users
+{
+    "username": "oso",
+    "password": "oso123",
+    "role": "user"
+}
+-
+{
+    "status": "success",
+    "user": {
+        "id": "671854ef43964713fadb783d"
+    }
+}
+
+POST
+localhost:8080/api/business
+{
+    "name": "mi-empresa-4",
+    "products": []
+}
+-
+{
+    "status": "success",
+    "result": {
+        "id": "671855ca43964713fadb7841",
+        "name": "mi-empresa-4",
+        "products": []
+    }
+}
+
+GET
+localhost:8080/api/users
+-
+{
+    "status": "success",
+    "users": [
+        {
+            "id": "6715ad2aab4efdd29fad77c0"
+        },
+        {
+            "id": "6715b3b95845dafea6506c8d"
+        },
+        {
+            "id": "6716e862fb8d8482904a4003"
+        },
+        {
+            "id": "6717f8b438d81f7aadbcb8a3"
+        },
+        {
+            "id": "6717f8d138d81f7aadbcb8a7"
+        },
+        {
+            "id": "671854b943964713fadb783b"
+        },
+        {
+            "id": "671854ef43964713fadb783d"
+        }
+    ]
+}
+
+
+GET
+localhost:8080/api/users/671854ef43964713fadb783d
+{
+    "status": "success",
+    "user": {
+        "id": "671854ef43964713fadb783d"
+    }
+}
+
+
+GET
+localhost:8080/api/business/671855ca43964713fadb7841
+{
+    "status": "success",
+    "result": {
+        "id": "671855ca43964713fadb7841",
+        "name": "mi-empresa-4",
+        "products": []
+    }
+}
+
+
+GET
+localhost:8080/api/business
+{
+    "status": "success",
+    "result": [
+        {
+            "id": "6715af4b5845dafea6506c85",
+            "name": "mi-empresa",
+            "products": [
+                {
+                    "id": "6715b19a5845dafea6506c87",
+                    "name": "procesador i7",
+                    "price": 200000,
+                    "_id": "6715b19a5845dafea6506c89"
+                },
+                {
+                    "id": "6715b54eb19aaa59fe8d1330",
+                    "name": "ram 16gb",
+                    "price": 50000,
+                    "_id": "6715b54eb19aaa59fe8d1333"
+                }
+            ]
+        },
+        {
+            "id": "6716e7e274e86c99f73bfa34",
+            "name": "mi-empresa-2",
+            "products": [
+                {
+                    "id": "6716e8abfb8d8482904a4008",
+                    "name": "teclado",
+                    "price": 30000,
+                    "_id": "6716e8abfb8d8482904a400a"
+                },
+                {
+                    "id": "6716e8b6fb8d8482904a400e",
+                    "name": "mouse",
+                    "price": 10000,
+                    "_id": "6716e8b6fb8d8482904a4011"
+                },
+                {
+                    "id": "6716e8bffb8d8482904a4017",
+                    "name": "monitor",
+                    "price": 80000,
+                    "_id": "6716e8bffb8d8482904a401b"
+                },
+                {
+                    "id": "671704a774761f40a14e8bd9",
+                    "name": "parlante",
+                    "price": 20000,
+                    "_id": "671704a774761f40a14e8bde"
+                }
+            ]
+        },
+        {
+            "id": "6717f8285c2f77592a6cfbf9",
+            "name": "mi-empresa-3",
+            "products": [
+                {
+                    "id": "6717f92838d81f7aadbcb8a9",
+                    "name": "tvideo",
+                    "price": 200000,
+                    "_id": "6717f92838d81f7aadbcb8ab"
+                },
+                {
+                    "id": "6717f9eb38d81f7aadbcb8b1",
+                    "name": "led",
+                    "price": 10000,
+                    "_id": "6717f9eb38d81f7aadbcb8b4"
+                }
+            ]
+        },
+        {
+            "id": "671855ca43964713fadb7841",
+            "name": "mi-empresa-4",
+            "products": []
+        }
+    ]
+}
+
+

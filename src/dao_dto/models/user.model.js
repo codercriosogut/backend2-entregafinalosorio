@@ -1,19 +1,18 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
-const collection = "Users"
+const cartSchema = new mongoose.Schema({
+    products: [{
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, required: true, default: 1 }
+    }]
+});
 
-const schema = new mongoose.Schema({
-    name: String,
-    email: String,
-    role: String,
-    orders: [
-        {
-            type: mongoose.SchemaTypes.ObjectId,
-            ref: "Orders"
-        }
-    ]
-})
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    role: String, // admin o user
+    cart: cartSchema
+});
 
-const userModel = mongoose.model(collection, schema)
-
-export default userModel
+// Cambia a export default
+export default mongoose.model('User', userSchema);
